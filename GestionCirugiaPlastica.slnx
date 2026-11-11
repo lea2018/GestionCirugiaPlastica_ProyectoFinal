@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/Scrips/">
+    <File Path="C:/Users/Andhy/Downloads/GestionCirugiaPlastica_ProyectoFinal-main/GestionCirugiaPlastica_ProyectoFinal-main/GestionCirugiaPlastica.Core/Scrip/Scrip Gestion Cirugia Plastica.sql" />
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path=".gitignore" />
+  </Folder>
+  <Folder Name="/tests/" />
+  <Project Path="GestionCirugiaPlastica.Api/GestionCirugiaPlastica.Api.csproj" Id="0a5da532-644f-46dc-9400-7416b30cd33d" />
+  <Project Path="GestionCirugiaPlastica.Application/GestionCirugiaPlastica.Application.csproj" Id="25e4f65b-c8c0-4841-8f8b-5bc73d2afa73" />
+  <Project Path="GestionCirugiaPlastica.Infrastructure/GestionCirugiaPlastica.Infrastructure.csproj" Id="6b5259cf-9f75-4317-b8fe-20198f765864" />
+</Solution>
