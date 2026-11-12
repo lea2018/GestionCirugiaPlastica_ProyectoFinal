@@ -30,7 +30,10 @@ var app = builder.Build();
 
 
 app.MapOpenApi();
-app.MapScalarApiReference();
+app.MapScalarApiReference(options =>
+{
+    options.WithOpenApiRoutePattern("/openapi/v1.json");
+});
 
 app.UseHttpsRedirection();
 
