@@ -20,7 +20,7 @@ public partial class GestionCirugiaPlasticaContext : DbContext
 
     public virtual DbSet<ControlesPostoperatorio> ControlesPostoperatorios { get; set; }
 
-    public virtual DbSet<DetallesRecetum> DetallesReceta { get; set; }
+    public virtual DbSet<DetallesReceta> DetallesReceta { get; set; }
 
     public virtual DbSet<Fotografia> Fotografias { get; set; }
 
@@ -99,7 +99,7 @@ public partial class GestionCirugiaPlasticaContext : DbContext
                 .HasConstraintName("FK_ControlesPostoperatorios_Cirugias");
         });
 
-        modelBuilder.Entity<DetallesRecetum>(entity =>
+        modelBuilder.Entity<DetallesReceta>(entity =>
         {
             entity.HasKey(e => e.DetalleRecetaId).HasName("PK__Detalles__DE1447049D073B39");
 

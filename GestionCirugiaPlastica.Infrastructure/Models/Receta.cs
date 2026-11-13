@@ -33,7 +33,7 @@ public partial class Receta
     public virtual Consulta? Consulta { get; set; }
 
     [InverseProperty("Receta")]
-    public virtual ICollection<DetallesRecetum> DetallesReceta { get; set; } = new List<DetallesRecetum>();
+    public virtual ICollection<DetallesReceta> DetallesReceta { get; set; } = new List<DetallesReceta>();
 
     [ForeignKey("PacienteId")]
     [InverseProperty("Receta")]

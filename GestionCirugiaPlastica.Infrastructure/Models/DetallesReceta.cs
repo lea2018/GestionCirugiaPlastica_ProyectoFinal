@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GestionCirugiaPlastica.Infrastructure.Models;
 
-public partial class DetallesRecetum
+public partial class DetallesReceta
 {
     [Key]
     public int DetalleRecetaId { get; set; }

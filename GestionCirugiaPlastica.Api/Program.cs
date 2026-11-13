@@ -14,22 +14,27 @@ builder.Services.AddDbContextFactory<GestionCirugiaPlasticaContext>(options =>
     )
 );
 
+// Registro de los servicios
 builder.Services.AddScoped<IServiceResult<Paciente, int>, PacientesService>();
+builder.Services.AddScoped<CirugiasService>();
+builder.Services.AddScoped<CitasService>();
+builder.Services.AddScoped<ConsultasService>();
+builder.Services.AddScoped<ControlesPostoperatoriosService>();
+builder.Services.AddScoped<DetallesRecetaService>();
+builder.Services.AddScoped<FotografiasService>();
+builder.Services.AddScoped<GastosService>();
+builder.Services.AddScoped<HistorialClinicoService>();
 
-// Add services to the container.
+// Configuración de Controllers y OpenAPI
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
-//if (app.Environment.IsDevelopment())
-//{
-//    app.MapOpenApi();
-//    app.MapScalarApiReference();
-//}
-
-
+// Configuración de OpenAPI
 app.MapOpenApi();
+
+// Configuración de Scalar
 app.MapScalarApiReference(options =>
 {
     options.WithOpenApiRoutePattern("/openapi/v1.json");

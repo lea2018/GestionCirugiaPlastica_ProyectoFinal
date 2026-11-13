@@ -1,4 +1,3 @@
 <Solution>
-  <Project Path="../GestionCirugiaPlastica.Core/GestionCirugiaPlastica.Core.csproj" Id="2f191fca-b16e-4483-acab-b46b5399d428" />
   <Project Path="GestionCirugiaPlastica.API.csproj" />
 </Solution>
