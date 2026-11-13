@@ -24,6 +24,16 @@ builder.Services.AddScoped<DetallesRecetaService>();
 builder.Services.AddScoped<FotografiasService>();
 builder.Services.AddScoped<GastosService>();
 builder.Services.AddScoped<HistorialClinicoService>();
+builder.Services.AddScoped<PacientesSegurosServices>();
+builder.Services.AddScoped<HistorialEstadosCitasServices>();
+builder.Services.AddScoped<PagosServices>();
+builder.Services.AddScoped<PreoperatoriosServices>(); 
+builder.Services.AddScoped<ProcedimientosServices>();
+builder.Services.AddScoped<RecetasServices>();
+builder.Services.AddScoped<RolesServices>();
+builder.Services.AddScoped<SegurosServices>();
+builder.Services.AddScoped<UsuariosServices>();
+
 
 // Configuración de Controllers y OpenAPI
 builder.Services.AddControllers();

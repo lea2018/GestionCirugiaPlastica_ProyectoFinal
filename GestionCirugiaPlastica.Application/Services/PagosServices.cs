@@ -1,187 +1,199 @@
-﻿using Aplicada1.Core;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using Aplicada1.Core;
 using GestionCirugiaPlastica.Infrastructure.Data;
 using GestionCirugiaPlastica.Infrastructure.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Text;
 
 namespace GestionCirugiaPlastica.Application.Services;
 
-public class PreoperatoriosServices(
+public class PagosServices(
     IDbContextFactory<GestionCirugiaPlasticaContext> contextFactory
-) : IServiceResult<Preoperatorio, int>
+) : IServiceResult<Pago, int>
 {
-    // 1. Registrar una nueva evaluación preoperatoria
-    public async Task<Result> Guardar(Preoperatorio preoperatorio)
+    // 1. Registrar o modificar un pago
+    public async Task<Result> Guardar(Pago pago)
     {
-        if (preoperatorio == null ||
-            preoperatorio.PreoperatorioId != 0 ||
-            preoperatorio.CirugiaId <= 0)
+        if (pago == null ||
+            pago.Monto <= 0 ||
+            (pago.CirugiaId == null && pago.CitaId == null) ||
+            (pago.CirugiaId.HasValue && pago.CitaId.HasValue))
         {
             return Result.Success(false);
         }
 
         await using var contexto = await contextFactory.CreateDbContextAsync();
 
-        // Comprobar que la cirugía existe
-        bool cirugiaExiste = await contexto.Cirugias
-            .AnyAsync(c => c.CirugiaId == preoperatorio.CirugiaId);
-
-        if (!cirugiaExiste)
-            return Result.Success(false);
-
-        // Validar autorización médica
-        if (preoperatorio.Autorizado &&
-            (string.IsNullOrWhiteSpace(preoperatorio.AnalisisLaboratorio) ||
-             string.IsNullOrWhiteSpace(preoperatorio.EvaluacionCardiologica) ||
-             string.IsNullOrWhiteSpace(preoperatorio.EvaluacionAnestesica)))
+        // Verificar que exista la cirugía asociada
+        if (pago.CirugiaId.HasValue)
         {
-            return Result.Success(false);
+            bool cirugiaExiste = await contexto.Cirugias
+                .AnyAsync(c => c.CirugiaId == pago.CirugiaId.Value);
+
+            if (!cirugiaExiste)
+                return Result.Success(false);
         }
 
-        // Registrar una evaluación nueva
-        var nuevoPreoperatorio = new Preoperatorio
+        // Verificar que exista la cita asociada
+        if (pago.CitaId.HasValue)
         {
-            CirugiaId = preoperatorio.CirugiaId,
-            AnalisisLaboratorio = preoperatorio.AnalisisLaboratorio?.Trim(),
-            EvaluacionCardiologica = preoperatorio.EvaluacionCardiologica?.Trim(),
-            EvaluacionAnestesica = preoperatorio.EvaluacionAnestesica?.Trim(),
-            Autorizado = preoperatorio.Autorizado,
-            Observaciones = preoperatorio.Observaciones?.Trim()
-        };
+            bool citaExiste = await contexto.Citas
+                .AnyAsync(c => c.CitaId == pago.CitaId.Value);
 
-        contexto.Preoperatorios.Add(nuevoPreoperatorio);
+            if (!citaExiste)
+                return Result.Success(false);
+        }
+
+        // Registrar un pago nuevo
+        if (pago.PagoId == 0)
+        {
+            var nuevoPago = new Pago
+            {
+                CirugiaId = pago.CirugiaId,
+                CitaId = pago.CitaId,
+                Monto = pago.Monto,
+                MetodoPago = pago.MetodoPago?.Trim(),
+                Concepto = pago.Concepto?.Trim()
+            };
+
+            contexto.Pagos.Add(nuevoPago);
+        }
+        else
+        {
+            // Buscar pago existente
+            var existente = await contexto.Pagos
+                .FirstOrDefaultAsync(p => p.PagoId == pago.PagoId);
+
+            if (existente == null)
+                return Result.Success(false);
+
+            existente.CirugiaId = pago.CirugiaId;
+            existente.CitaId = pago.CitaId;
+            existente.Monto = pago.Monto;
+            existente.MetodoPago = pago.MetodoPago?.Trim();
+            existente.Concepto = pago.Concepto?.Trim();
+        }
 
         return Result.Success(await contexto.SaveChangesAsync() > 0);
     }
 
-    // 2. Buscar evaluación por ID
-    public async Task<Result<Preoperatorio?>> Buscar(int preoperatorioId)
+    // 2. Buscar pago por ID
+    public async Task<Result<Pago?>> Buscar(int pagoId)
     {
         await using var contexto = await contextFactory.CreateDbContextAsync();
 
-        var preoperatorio = await contexto.Preoperatorios
+        var pago = await contexto.Pagos
             .AsNoTracking()
-            .FirstOrDefaultAsync(p =>
-                p.PreoperatorioId == preoperatorioId);
+            .Include(p => p.Cirugia)
+            .Include(p => p.Cita)
+            .FirstOrDefaultAsync(p => p.PagoId == pagoId);
 
-        return Result<Preoperatorio?>.Success(preoperatorio);
+        return Result<Pago?>.Success(pago);
     }
 
-    // 3. Obtener evaluaciones según un criterio
-    public async Task<Result<List<Preoperatorio>>> GetList(
-        Expression<Func<Preoperatorio, bool>> criterio)
+    // 3. Listar pagos mediante un criterio personalizado
+    public async Task<Result<List<Pago>>> GetList(
+        Expression<Func<Pago, bool>> criterio)
     {
         await using var contexto = await contextFactory.CreateDbContextAsync();
 
-        var preoperatorios = await contexto.Preoperatorios
+        var pagos = await contexto.Pagos
             .AsNoTracking()
+            .Include(p => p.Cirugia)
+            .Include(p => p.Cita)
             .Where(criterio)
-            .OrderByDescending(p => p.FechaEvaluacion)
-            .ThenByDescending(p => p.PreoperatorioId)
+            .OrderByDescending(p => p.Fecha)
             .ToListAsync();
 
-        return Result<List<Preoperatorio>>.Success(preoperatorios);
+        return Result<List<Pago>>.Success(pagos);
     }
 
-    // 4. Consultar historial de evaluaciones de una cirugía
-    public async Task<Result<List<Preoperatorio>>> BuscarHistorial(int cirugiaId)
+    // 4. Buscar pagos por cirugía
+    public async Task<Result<List<Pago>>> BuscarPorCirugia(int cirugiaId)
     {
         await using var contexto = await contextFactory.CreateDbContextAsync();
 
-        var historial = await contexto.Preoperatorios
+        var pagos = await contexto.Pagos
             .AsNoTracking()
+            .Include(p => p.Cirugia)
+            .Include(p => p.Cita)
             .Where(p => p.CirugiaId == cirugiaId)
-            .OrderByDescending(p => p.FechaEvaluacion)
-            .ThenByDescending(p => p.PreoperatorioId)
+            .OrderByDescending(p => p.Fecha)
             .ToListAsync();
 
-        return Result<List<Preoperatorio>>.Success(historial);
+        return Result<List<Pago>>.Success(pagos);
     }
 
-    // 5. Buscar evaluaciones por cirugía
-    public async Task<Result<List<Preoperatorio>>> BuscarPorCirugia(
-        int cirugiaId)
+    // 5. Buscar pagos por cita
+    public async Task<Result<List<Pago>>> BuscarPorCita(int citaId)
     {
         await using var contexto = await contextFactory.CreateDbContextAsync();
 
-        var evaluaciones = await contexto.Preoperatorios
+        var pagos = await contexto.Pagos
             .AsNoTracking()
-            .Where(p => p.CirugiaId == cirugiaId)
-            .OrderByDescending(p => p.FechaEvaluacion)
+            .Include(p => p.Cirugia)
+            .Include(p => p.Cita)
+            .Where(p => p.CitaId == citaId)
+            .OrderByDescending(p => p.Fecha)
             .ToListAsync();
 
-        return Result<List<Preoperatorio>>.Success(evaluaciones);
+        return Result<List<Pago>>.Success(pagos);
     }
 
-    // 6. Buscar evaluaciones según autorización
-    public async Task<Result<List<Preoperatorio>>> BuscarPorAutorizacion(
-        bool autorizado)
+    // 6. Buscar pagos de una fecha específica
+    public async Task<Result<List<Pago>>> BuscarPorFecha(DateTime fecha)
     {
         await using var contexto = await contextFactory.CreateDbContextAsync();
 
-        var evaluaciones = await contexto.Preoperatorios
+        var pagos = await contexto.Pagos
             .AsNoTracking()
-            .Where(p => p.Autorizado == autorizado)
-            .OrderByDescending(p => p.FechaEvaluacion)
+            .Include(p => p.Cirugia)
+            .Include(p => p.Cita)
+            .Where(p => p.Fecha >= fecha.Date &&
+                        p.Fecha < fecha.Date.AddDays(1))
+            .OrderByDescending(p => p.Fecha)
             .ToListAsync();
 
-        return Result<List<Preoperatorio>>.Success(evaluaciones);
+        return Result<List<Pago>>.Success(pagos);
     }
 
-    // 7. Buscar evaluaciones con requisitos pendientes
-    public async Task<Result<List<Preoperatorio>>> BuscarRequisitosPendientes()
+    // 7. Buscar pagos entre dos fechas
+    public async Task<Result<List<Pago>>> BuscarPorRangoFechas(
+        DateTime fechaInicio,
+        DateTime fechaFin)
     {
-        await using var contexto = await contextFactory.CreateDbContextAsync();
-
-        var pendientes = await contexto.Preoperatorios
-            .AsNoTracking()
-            .Where(p =>
-                !p.Autorizado ||
-                p.AnalisisLaboratorio == null ||
-                p.AnalisisLaboratorio.Trim() == "" ||
-                p.EvaluacionCardiologica == null ||
-                p.EvaluacionCardiologica.Trim() == "" ||
-                p.EvaluacionAnestesica == null ||
-                p.EvaluacionAnestesica.Trim() == "")
-            .OrderByDescending(p => p.FechaEvaluacion)
-            .ToListAsync();
-
-        return Result<List<Preoperatorio>>.Success(pendientes);
-    }
-
-    // 8. Buscar evaluaciones por rango de fechas
-    public async Task<Result<List<Preoperatorio>>> BuscarPorFecha(
-        DateTime fechaDesde,
-        DateTime fechaHasta)
-    {
-        if (fechaDesde.Date > fechaHasta.Date)
+        if (fechaInicio.Date > fechaFin.Date)
         {
-            return Result<List<Preoperatorio>>.Success(
-                new List<Preoperatorio>());
+            return Result<List<Pago>>.Success(new List<Pago>());
         }
 
         await using var contexto = await contextFactory.CreateDbContextAsync();
 
-        DateTime desde = fechaDesde.Date;
-        DateTime hasta = fechaHasta.Date.AddDays(1);
+        DateTime inicio = fechaInicio.Date;
+        DateTime fin = fechaFin.Date.AddDays(1);
 
-        var evaluaciones = await contexto.Preoperatorios
+        var pagos = await contexto.Pagos
             .AsNoTracking()
-            .Where(p =>
-                p.FechaEvaluacion >= desde &&
-                p.FechaEvaluacion < hasta)
-            .OrderByDescending(p => p.FechaEvaluacion)
+            .Include(p => p.Cirugia)
+            .Include(p => p.Cita)
+            .Where(p => p.Fecha >= inicio && p.Fecha < fin)
+            .OrderByDescending(p => p.Fecha)
             .ToListAsync();
 
-        return Result<List<Preoperatorio>>.Success(evaluaciones);
+        return Result<List<Pago>>.Success(pagos);
     }
 
-    // 9. No permitir eliminar evaluaciones clínicas
-    public Task<Result> Eliminar(int preoperatorioId)
+    // 8. Eliminar pago por ID
+    public async Task<Result> Eliminar(int pagoId)
     {
-        return Task.FromResult<Result>(Result.Success(false));
+        await using var contexto = await contextFactory.CreateDbContextAsync();
+
+        bool eliminado = await contexto.Pagos
+            .Where(p => p.PagoId == pagoId)
+            .ExecuteDeleteAsync() > 0;
+
+        return Result.Success(eliminado);
     }
 }

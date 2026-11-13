@@ -22,10 +22,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\GestionCirugiaPlastica.Application\GestionCirugiaPlastica.Application.csproj" />
     <ProjectReference Include="..\GestionCirugiaPlastica.Infrastructure\GestionCirugiaPlastica.Infrastructure.csproj" />
   </ItemGroup>

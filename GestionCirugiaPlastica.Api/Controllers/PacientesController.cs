@@ -1,50 +1,52 @@
 ﻿using Aplicada1.Core;
+using GestionCirugiaPlastica.Application.Services;
 using GestionCirugiaPlastica.Infrastructure.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace GestionCirugiaPlastica.API.Controllers;
+namespace GestionCirugiaPlastica.Api.Controllers;
 
-[ApiController]
 [Route("api/[controller]")]
-public class PacientesController : ControllerBase
+[ApiController]
+public class PacientesController(
+    IServiceResult<Paciente, int> pacientesService
+) : ControllerBase
 {
-    private readonly IServiceResult<Paciente, int> _pacientesService;
-
-    public PacientesController(
-        IServiceResult<Paciente, int> pacientesService)
-    {
-        _pacientesService = pacientesService;
-    }
-
-    // GET: api/Pacientes
-    [HttpGet]
-    public async Task<IActionResult> Get()
-    {
-        var resultado = await _pacientesService.GetList(p => true);
-        return Ok(resultado);
-    }
-
-    // GET: api/Pacientes/5
-    [HttpGet("{id:int}")]
-    public async Task<IActionResult> Get(int id)
-    {
-        var resultado = await _pacientesService.Buscar(id);
-        return Ok(resultado);
-    }
-
-    // POST: api/Pacientes
     [HttpPost]
-    public async Task<IActionResult> Post([FromBody] Paciente paciente)
+    public async Task<IActionResult> Guardar(Paciente paciente)
     {
-        var resultado = await _pacientesService.Guardar(paciente);
+        var resultado = await pacientesService.Guardar(paciente);
         return Ok(resultado);
     }
 
-    // DELETE: api/Pacientes/5
-    [HttpDelete("{id:int}")]
-    public async Task<IActionResult> Delete(int id)
+    [HttpGet("{id:int}")]
+    public async Task<IActionResult> Buscar(int id)
     {
-        var resultado = await _pacientesService.Eliminar(id);
+        var resultado = await pacientesService.Buscar(id);
+        return Ok(resultado);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetList()
+    {
+        var resultado = await pacientesService.GetList(p => true);
+        return Ok(resultado);
+    }
+
+    [HttpGet("buscar")]
+    public async Task<IActionResult> BuscarPorNombre([FromQuery] string nombre)
+    {
+        var resultado = await pacientesService.GetList(
+            p => p.Nombre.Contains(nombre) ||
+                 p.Apellido.Contains(nombre)
+        );
+
+        return Ok(resultado);
+    }
+
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> Eliminar(int id)
+    {
+        var resultado = await pacientesService.Eliminar(id);
         return Ok(resultado);
     }
 }
