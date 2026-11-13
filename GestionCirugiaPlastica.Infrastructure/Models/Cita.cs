@@ -41,7 +41,7 @@ public partial class Cita
     public virtual ICollection<Consulta> Consulta { get; set; } = new List<Consulta>();
 
     [InverseProperty("Cita")]
-    public virtual ICollection<HistorialEstadosCitum> HistorialEstadosCita { get; set; } = new List<HistorialEstadosCitum>();
+    public virtual ICollection<HistorialEstadosCitas> HistorialEstadosCita { get; set; } = new List<HistorialEstadosCitas>();
 
     [InverseProperty("CitaAnterior")]
     public virtual ICollection<Cita> InverseCitaAnterior { get; set; } = new List<Cita>();

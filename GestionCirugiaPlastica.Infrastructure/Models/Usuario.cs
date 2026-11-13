@@ -35,7 +35,7 @@ public partial class Usuario
     public virtual ICollection<Gasto> Gastos { get; set; } = new List<Gasto>();
 
     [InverseProperty("Usuario")]
-    public virtual ICollection<HistorialEstadosCitum> HistorialEstadosCita { get; set; } = new List<HistorialEstadosCitum>();
+    public virtual ICollection<HistorialEstadosCitas> HistorialEstadosCita { get; set; } = new List<HistorialEstadosCitas>();
 
     [InverseProperty("Usuario")]
     public virtual ICollection<Receta> Receta { get; set; } = new List<Receta>();

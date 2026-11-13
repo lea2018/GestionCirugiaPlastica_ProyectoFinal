@@ -100,7 +100,7 @@ public class RecetasServices(
                 Indicaciones = receta.Indicaciones?.Trim(),
 
                 DetallesReceta = receta.DetallesReceta
-                    .Select(d => new DetallesRecetum
+                    .Select(d => new DetallesReceta
                     {
                         Medicamento = d.Medicamento.Trim(),
                         Dosis = d.Dosis?.Trim(),
@@ -139,7 +139,7 @@ public class RecetasServices(
             {
                 if (detalle.DetalleRecetaId == 0)
                 {
-                    existente.DetallesReceta.Add(new DetallesRecetum
+                    existente.DetallesReceta.Add(new DetallesReceta
                     {
                         Medicamento = detalle.Medicamento.Trim(),
                         Dosis = detalle.Dosis?.Trim(),

@@ -28,7 +28,7 @@ public partial class GestionCirugiaPlasticaContext : DbContext
 
     public virtual DbSet<HistorialClinico> HistorialClinicos { get; set; }
 
-    public virtual DbSet<HistorialEstadosCitum> HistorialEstadosCita { get; set; }
+    public virtual DbSet<HistorialEstadosCitas> HistorialEstadosCita { get; set; }
 
     public virtual DbSet<Paciente> Pacientes { get; set; }
 
@@ -139,7 +139,7 @@ public partial class GestionCirugiaPlasticaContext : DbContext
                 .HasConstraintName("FK_HistorialClinico_Pacientes");
         });
 
-        modelBuilder.Entity<HistorialEstadosCitum>(entity =>
+        modelBuilder.Entity<HistorialEstadosCitas>(entity =>
         {
             entity.HasKey(e => e.HistorialEstadoCitaId).HasName("PK__Historia__1C1561E562400B64");
 
