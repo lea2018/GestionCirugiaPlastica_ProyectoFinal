@@ -4,7 +4,7 @@ using System.Text.Json;
 
 namespace GestionCirugiaPlastica.WinForms;
 
-internal sealed partial class MainForm
+internal partial class MainForm
 {
     private async Task EditPatient(ApiPaciente? current)
     {

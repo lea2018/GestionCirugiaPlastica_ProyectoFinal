@@ -4,14 +4,13 @@ using GestionCirugiaPlastica.WinForms.Forms;
 
 namespace GestionCirugiaPlastica.WinForms;
 
-internal sealed partial class MainForm
+internal partial class MainForm
 {
     private void ShowModule(Control module)
     {
         _grid = null;
         module.Dock = DockStyle.Fill;
-        _pageContent.Controls.Add(module);
-        _pageContent.Controls.SetChildIndex(module, 1);
+        _dynamicHost.Controls.Add(module);
     }
 
     private async Task ShowPublicNews()

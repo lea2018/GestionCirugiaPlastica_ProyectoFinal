@@ -4,7 +4,7 @@ using System.Text.Json;
 
 namespace GestionCirugiaPlastica.WinForms;
 
-internal sealed partial class MainForm
+internal partial class MainForm
 {
     private async Task ShowRecipes()
     {
@@ -15,7 +15,7 @@ internal sealed partial class MainForm
         var refresh = Button("Actualizar", Color.White, Mauve); refresh.Dock = DockStyle.Right; refresh.Width = 120;
         tools.Controls.Add(search); tools.Controls.Add(refresh); tools.Controls.Add(add);
         var grid = CreateGrid(); grid.Dock = DockStyle.Fill; _grid = grid;
-        _pageContent.Controls.Add(grid); _pageContent.Controls.SetChildIndex(grid, 1); _pageContent.Controls.Add(tools);
+        _dynamicHost.Controls.Add(grid); _dynamicHost.Controls.Add(tools);
         List<ApiReceta> recipes = [];
         async Task LoadRecipes()
         {
@@ -68,7 +68,7 @@ internal sealed partial class MainForm
         var tools = new Panel { Dock = DockStyle.Top, Height = 52, Padding = new Padding(0, 4, 0, 8) };
         var add = Button("Agregar aseguradora", Mauve, Color.White); add.Dock = DockStyle.Right; add.Width = 180;
         var refresh = Button("Actualizar", Color.White, Mauve); refresh.Dock = DockStyle.Right; refresh.Width = 120; tools.Controls.Add(add); tools.Controls.Add(refresh);
-        var grid = CreateGrid(); grid.Dock = DockStyle.Fill; _grid = grid; _pageContent.Controls.Add(grid); _pageContent.Controls.SetChildIndex(grid, 1); _pageContent.Controls.Add(tools);
+        var grid = CreateGrid(); grid.Dock = DockStyle.Fill; _grid = grid; _dynamicHost.Controls.Add(grid); _dynamicHost.Controls.Add(tools);
         List<ApiSeguro> insurers = [];
         async Task LoadInsurers()
         {
@@ -107,7 +107,7 @@ internal sealed partial class MainForm
         var tools = new Panel { Dock = DockStyle.Top, Height = 50 };
         var search = new TextBox { PlaceholderText = "Buscar por nombre, usuario o correo", Dock = DockStyle.Left, Width = 330, ForeColor = Charcoal, BackColor = Color.White }; tools.Controls.Add(search);
         var refresh = Button("Actualizar", Color.White, Mauve); refresh.Dock = DockStyle.Right; refresh.Width = 120; tools.Controls.Add(refresh);
-        var grid = CreateGrid(); grid.Dock = DockStyle.Fill; _grid = grid; _pageContent.Controls.Add(grid); _pageContent.Controls.SetChildIndex(grid, 1); _pageContent.Controls.Add(tools);
+        var grid = CreateGrid(); grid.Dock = DockStyle.Fill; _grid = grid; _dynamicHost.Controls.Add(grid); _dynamicHost.Controls.Add(tools);
         try
         {
             var users = await _api.GetAsync<List<ApiUsuario>>("api/Usuarios"); var roles = await _api.GetAsync<List<ApiRol>>("api/Roles");

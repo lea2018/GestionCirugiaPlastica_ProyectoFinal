@@ -4,28 +4,19 @@ using System.Text.Json;
 
 namespace GestionCirugiaPlastica.WinForms;
 
-internal sealed partial class MainForm
+internal partial class MainForm
 {
+    private void WireRightPanelEvents()
+    {
+        _btnRightProfile.Click += async (_, _) => await ShowSection("Mi perfil");
+        _btnRightLogout.Click += (_, _) => { _api.Logout(); ShowLogin(); };
+        _btnPrevMonth.Click += (_, _) => { _calendarMonth = _calendarMonth.AddMonths(-1); RefreshRightCalendar(); };
+        _btnNextMonth.Click += (_, _) => { _calendarMonth = _calendarMonth.AddMonths(1); RefreshRightCalendar(); };
+    }
+
     private async Task BuildRightPanel()
     {
-        var profile = new Panel { Dock = DockStyle.Top, Height = 108, BackColor = Color.White, Padding = new Padding(0, 6, 0, 12) };
-        _rightProfile = new Label { Text = $"{_api.UserName}\r\n{_api.Role}", Dock = DockStyle.Top, Height = 50, ForeColor = Charcoal, Font = new Font("Segoe UI", 10, FontStyle.Bold) };
-        var profileButton = Button("Mi perfil", Color.White, Mauve); profileButton.Dock = DockStyle.Left; profileButton.Width = 110; profileButton.Height = 34; profileButton.Click += async (_, _) => await ShowSection("Mi perfil");
-        var logoutButton = Button("Salir", Color.White, Mauve); logoutButton.Dock = DockStyle.Right; logoutButton.Width = 80; logoutButton.Height = 34; logoutButton.Click += (_, _) => { _api.Logout(); ShowLogin(); };
-        profile.Controls.Add(profileButton); profile.Controls.Add(logoutButton); profile.Controls.Add(_rightProfile);
-        _calendarTitle = new Label { Dock = DockStyle.Top, Height = 30, TextAlign = ContentAlignment.MiddleCenter, ForeColor = Charcoal, Font = new Font("Segoe UI", 11, FontStyle.Bold) };
-        var monthNav = new Panel { Dock = DockStyle.Top, Height = 38 };
-        var previous = Button("‹", Color.White, Mauve); previous.Dock = DockStyle.Left; previous.Width = 42; previous.FlatAppearance.BorderSize = 0;
-        var next = Button("›", Color.White, Mauve); next.Dock = DockStyle.Right; next.Width = 42; next.FlatAppearance.BorderSize = 0;
-        previous.Click += (_, _) => { _calendarMonth = _calendarMonth.AddMonths(-1); RefreshRightCalendar(); };
-        next.Click += (_, _) => { _calendarMonth = _calendarMonth.AddMonths(1); RefreshRightCalendar(); };
-        monthNav.Controls.Add(previous); monthNav.Controls.Add(next);
-        _calendarTable = new TableLayoutPanel { Dock = DockStyle.Top, Height = 222, ColumnCount = 7, RowCount = 7, BackColor = Color.White, Margin = new Padding(0, 8, 0, 16) };
-        for (var column = 0; column < 7; column++) _calendarTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 14.285f));
-        for (var row = 0; row < 7; row++) _calendarTable.RowStyles.Add(new RowStyle(SizeType.Percent, 14.285f));
-        _dayAppointments = new FlowLayoutPanel { Dock = DockStyle.Fill, FlowDirection = FlowDirection.TopDown, WrapContents = false, AutoScroll = true, BackColor = Color.White, Padding = new Padding(0, 8, 0, 0) };
-        var appointmentHeader = new Label { Text = "Citas del día", Dock = DockStyle.Top, Height = 44, ForeColor = Charcoal, Font = new Font("Segoe UI", 12, FontStyle.Bold), TextAlign = ContentAlignment.BottomLeft };
-        _rightPanel.Controls.Add(_dayAppointments); _rightPanel.Controls.Add(appointmentHeader); _rightPanel.Controls.Add(_calendarTable); _rightPanel.Controls.Add(monthNav); _rightPanel.Controls.Add(_calendarTitle); _rightPanel.Controls.Add(profile);
+        _rightProfile.Text = $"{_api.UserName}\r\n{_api.Role}";
         RefreshRightCalendar();
         try
         {
@@ -48,8 +39,8 @@ internal sealed partial class MainForm
 
     private void AttachStatusBar()
     {
-        var statusBar = new Panel { Dock = DockStyle.Bottom, Height = 34 };
-        _status.Text = ""; statusBar.Controls.Add(_status); _pageContent.Controls.Add(statusBar);
+        _status.Text = "";
+        _statusBar.Visible = true;
     }
 
     private void RefreshRightCalendar()

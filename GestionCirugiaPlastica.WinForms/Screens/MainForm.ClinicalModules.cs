@@ -4,14 +4,14 @@ using System.Text.Json;
 
 namespace GestionCirugiaPlastica.WinForms;
 
-internal sealed partial class MainForm
+internal partial class MainForm
 {
     private async Task ShowMyProfile()
     {
         AttachStatusBar();
         var panel = new Panel { Dock = DockStyle.Fill, BackColor = Color.White, Padding = new Padding(24) };
         var message = new Label { Dock = DockStyle.Bottom, Height = 40, ForeColor = Mauve };
-        panel.Controls.Add(message); _pageContent.Controls.Add(panel);
+        panel.Controls.Add(message); _dynamicHost.Controls.Add(panel);
         try
         {
             var profile = await _api.GetAsync<JsonElement>("api/Perfil");
@@ -58,7 +58,7 @@ internal sealed partial class MainForm
         var greeting = new Label { Text = "Cargando información de tu portal…", Dock = DockStyle.Top, Height = 80, ForeColor = Charcoal, Font = new Font("Segoe UI", 17, FontStyle.Bold) };
         var details = new Label { Dock = DockStyle.Top, Height = 100, ForeColor = Taupe, Font = new Font("Segoe UI", 10) };
         var openPortal = Button("Ver mi perfil, citas y recetas", Mauve, Color.White); openPortal.Dock = DockStyle.Top; openPortal.Height = 42; openPortal.Click += async (_, _) => await ShowSection("Mi perfil, citas y recetas");
-        panel.Controls.Add(openPortal); panel.Controls.Add(details); panel.Controls.Add(greeting); _pageContent.Controls.Add(panel);
+        panel.Controls.Add(openPortal); panel.Controls.Add(details); panel.Controls.Add(greeting); _dynamicHost.Controls.Add(panel);
         try
         {
             var profile = await _api.GetAsync<JsonElement>("api/PortalPaciente/perfil");
@@ -92,7 +92,7 @@ internal sealed partial class MainForm
         addConsultation.Click += async (_, _) => { if (loadedRecord is { } record) await AddConsultation(record, result); else MessageBox.Show(this, "Consulta primero el expediente del paciente."); };
         search.KeyDown += (_, e) => { if (e.KeyCode == Keys.Enter) button.PerformClick(); };
         toolbar.Controls.AddRange([patientPicker, search, button, edit, addConsultation]);
-        panel.Controls.Add(result); panel.Controls.Add(toolbar); _pageContent.Controls.Add(panel);
+        panel.Controls.Add(result); panel.Controls.Add(toolbar); _dynamicHost.Controls.Add(panel);
         _ = LoadExpedientePatients(patientPicker, result, preselectedPatientId);
     }
 
@@ -160,7 +160,7 @@ internal sealed partial class MainForm
         var insuranceGrid = CreateGrid(); insuranceGrid.Dock = DockStyle.Fill; insurancePage.Controls.Add(insuranceGrid);
         var recipeGrid = CreateGrid(); recipeGrid.Dock = DockStyle.Fill; recipesPage.Controls.Add(recipeGrid);
         tabs.TabPages.AddRange([profilePage, appointmentsPage, insurancePage, recipesPage]);
-        var panel = new Panel { Dock = DockStyle.Fill, Padding = new Padding(0, 12, 0, 0), BackColor = Color.White }; panel.Controls.Add(tabs); _pageContent.Controls.Add(panel);
+        var panel = new Panel { Dock = DockStyle.Fill, Padding = new Padding(0, 12, 0, 0), BackColor = Color.White }; panel.Controls.Add(tabs); _dynamicHost.Controls.Add(panel);
         List<JsonElement> appointments = [];
         try
         {

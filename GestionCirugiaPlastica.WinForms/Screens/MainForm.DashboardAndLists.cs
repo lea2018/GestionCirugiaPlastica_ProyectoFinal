@@ -4,7 +4,7 @@ using System.Text.Json;
 
 namespace GestionCirugiaPlastica.WinForms;
 
-internal sealed partial class MainForm
+internal partial class MainForm
 {
     private async Task ShowDashboard()
     {
@@ -50,7 +50,7 @@ internal sealed partial class MainForm
         lower.Controls.Add(recentCard, 0, 0); lower.Controls.Add(activityCard, 1, 0);
         metricFlow.SizeChanged += (_, _) => { var width = Math.Max(145, (metricFlow.ClientSize.Width - 52) / 4); foreach (Control item in metricFlow.Controls) item.Width = width; };
         layout.Controls.Add(metricFlow, 0, 0); layout.Controls.Add(revenueDetails, 0, 1); layout.Controls.Add(lower, 0, 2); layout.Controls.Add(dashboardStatus, 0, 3);
-        _pageContent.Controls.Add(layout); _pageContent.Controls.SetChildIndex(layout, 1);
+        _dynamicHost.Controls.Add(layout);
         try
         {
             var patientTask = _api.GetAsync<List<ApiPaciente>>("api/Pacientes");
@@ -114,7 +114,7 @@ internal sealed partial class MainForm
         lists.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 55)); lists.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 45));
         lists.Controls.Add(surgeriesCardList, 0, 0); lists.Controls.Add(appointmentsCardList, 1, 0);
         layout.Controls.Add(metrics, 0, 0); layout.Controls.Add(lists, 0, 1); layout.Controls.Add(status, 0, 2);
-        _pageContent.Controls.Add(layout); _pageContent.Controls.SetChildIndex(layout, 1);
+        _dynamicHost.Controls.Add(layout);
 
         try
         {

@@ -4,7 +4,7 @@ using System.Text.Json;
 
 namespace GestionCirugiaPlastica.WinForms;
 
-internal sealed partial class MainForm
+internal partial class MainForm
 {
     private static DateTime ReadDate(JsonElement value, string name) => FindProperty(value, name).ValueKind == JsonValueKind.String && DateTime.TryParse(ReadText(value, name), out var date) ? date : DateTime.MinValue;
 
