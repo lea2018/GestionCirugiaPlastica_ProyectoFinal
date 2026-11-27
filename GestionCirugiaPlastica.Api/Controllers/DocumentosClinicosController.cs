@@ -13,10 +13,15 @@ namespace GestionCirugiaPlastica.Api.Controllers;
 public sealed class DocumentosClinicosController(IDbContextFactory<GestionCirugiaPlasticaContext> factory, IWebHostEnvironment environment) : ControllerBase
 {
     private const long MaxBytes = 20 * 1024 * 1024;
-    private static readonly Dictionary<string, string> Allowed = new(StringComparer.OrdinalIgnoreCase)
+
+    private static string? ResolveExtension(string? contentType)
     {
-        ["application/pdf"] = ".pdf", ["image/jpeg"] = ".jpg", ["image/png"] = ".png", ["image/webp"] = ".webp"
-    };
+        if (string.Equals(contentType, "application/pdf", StringComparison.OrdinalIgnoreCase)) return ".pdf";
+        if (string.Equals(contentType, "image/jpeg", StringComparison.OrdinalIgnoreCase)) return ".jpg";
+        if (string.Equals(contentType, "image/png", StringComparison.OrdinalIgnoreCase)) return ".png";
+        if (string.Equals(contentType, "image/webp", StringComparison.OrdinalIgnoreCase)) return ".webp";
+        return null;
+    }
 
     [HttpPost("paciente/{pacienteId:int}")]
     [RequestSizeLimit(21 * 1024 * 1024)]
@@ -24,7 +29,8 @@ public sealed class DocumentosClinicosController(IDbContextFactory<GestionCirugi
     {
         if (archivo is null || archivo.Length == 0) return BadRequest(new { message = "Selecciona un documento." });
         if (archivo.Length > MaxBytes) return BadRequest(new { message = "El documento no puede superar 20 MB." });
-        if (!Allowed.TryGetValue(archivo.ContentType, out var extension)) return BadRequest(new { message = "Formato permitido: PDF, JPEG, PNG o WebP." });
+        var extension = ResolveExtension(archivo.ContentType);
+        if (extension is null) return BadRequest(new { message = "Formato permitido: PDF, JPEG, PNG o WebP." });
         var categorias = new[] { "Laboratorio", "Estudio", "Consentimiento", "Otro" };
         if (!categorias.Contains(categoria, StringComparer.OrdinalIgnoreCase)) return BadRequest(new { message = "Categoría de documento no válida." });
 
@@ -39,7 +45,7 @@ public sealed class DocumentosClinicosController(IDbContextFactory<GestionCirugi
         Directory.CreateDirectory(baseDirectory);
         var filename = $"{Guid.NewGuid():N}{extension}";
         var path = Path.GetFullPath(Path.Combine(baseDirectory, filename));
-        if (!path.StartsWith(baseDirectory, StringComparison.OrdinalIgnoreCase))
+        if (!path.StartsWith(baseDirectory, StringComparison.Ordinal))
             return BadRequest(new { message = "Ruta de archivo no válida." });
         try
         {

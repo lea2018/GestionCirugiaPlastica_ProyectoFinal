@@ -18,6 +18,14 @@ public class FotografiasController(
 {
     private const long MaxImageBytes = 8 * 1024 * 1024;
 
+    private static string? ResolveExtension(string? contentType)
+    {
+        if (string.Equals(contentType, "image/jpeg", StringComparison.OrdinalIgnoreCase)) return ".jpg";
+        if (string.Equals(contentType, "image/png", StringComparison.OrdinalIgnoreCase)) return ".png";
+        if (string.Equals(contentType, "image/webp", StringComparison.OrdinalIgnoreCase)) return ".webp";
+        return null;
+    }
+
     [HttpGet("cirugia/{cirugiaId:int}")]
     public async Task<IActionResult> PorCirugia(int cirugiaId)
     {
@@ -32,13 +40,7 @@ public class FotografiasController(
         if (archivo is null || archivo.Length == 0) return BadRequest(new { message = "Selecciona una imagen." });
         if (archivo.Length > MaxImageBytes) return BadRequest(new { message = "La imagen no puede superar 8 MB." });
 
-        var extension = archivo.ContentType.ToLowerInvariant() switch
-        {
-            "image/jpeg" => ".jpg",
-            "image/png" => ".png",
-            "image/webp" => ".webp",
-            _ => null
-        };
+        var extension = ResolveExtension(archivo.ContentType);
         if (extension is null) return BadRequest(new { message = "Formato no permitido. Usa JPEG, PNG o WebP." });
 
         await using var db = await contextFactory.CreateDbContextAsync();
@@ -50,7 +52,7 @@ public class FotografiasController(
         Directory.CreateDirectory(baseDirectory);
         var filename = $"{Guid.NewGuid():N}{extension}";
         var fullPath = Path.GetFullPath(Path.Combine(baseDirectory, filename));
-        if (!fullPath.StartsWith(baseDirectory, StringComparison.OrdinalIgnoreCase))
+        if (!fullPath.StartsWith(baseDirectory, StringComparison.Ordinal))
             return BadRequest(new { message = "Ruta de archivo no válida." });
         try
         {
