@@ -45,4 +45,19 @@ internal partial class MainForm : Form
     private sealed class ApiDashboardExpense { public DateTime Fecha { get; set; } public decimal Monto { get; set; } }
 
     protected override void OnFormClosed(FormClosedEventArgs e) { _api?.Dispose(); base.OnFormClosed(e); }
+
+    private void _topbarWelcome_Click(object sender, EventArgs e)
+    {
+
+    }
+
+    private void _btnRightProfile_Click(object sender, EventArgs e)
+    {
+
+    }
+
+    private void _navAgenda_Click(object sender, EventArgs e)
+    {
+
+    }
 }

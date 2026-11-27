@@ -89,16 +89,26 @@ public sealed class PerfilController(
         await using var imageStream = new MemoryStream();
         await file.CopyToAsync(imageStream);
         var imageBytes = imageStream.ToArray();
-        var extension = GetImageExtension(imageBytes);
-        if (extension is null)
+        var imageType = GetImageType(imageBytes);
+        if (imageType < 0)
             return BadRequest(new { message = "Usa una imagen JPEG, PNG o WebP válida." });
+        var extension = imageType switch
+        {
+            0 => ".jpg",
+            1 => ".png",
+            _ => ".webp"
+        };
 
         var webRoot = GetWebRoot();
-        var photoDirectory = Path.Combine(webRoot, "uploads", "perfiles");
+        var photoDirectory = Path.GetFullPath(Path.Combine(webRoot, "uploads", "perfiles"));
+        if (!photoDirectory.EndsWith(Path.DirectorySeparatorChar))
+            photoDirectory += Path.DirectorySeparatorChar;
         Directory.CreateDirectory(photoDirectory);
 
         var fileName = $"{Guid.NewGuid():N}{extension}";
-        var fullPath = Path.Combine(photoDirectory, fileName);
+        var fullPath = Path.GetFullPath(Path.Combine(photoDirectory, fileName));
+        if (!fullPath.StartsWith(photoDirectory, StringComparison.Ordinal))
+            return BadRequest(new { message = "Ruta de archivo no válida." });
         await System.IO.File.WriteAllBytesAsync(fullPath, imageBytes);
 
         var previousPhoto = user.FotoUrl;
@@ -146,17 +156,17 @@ public sealed class PerfilController(
 
     private string GetWebRoot() => environment.WebRootPath ?? Path.Combine(environment.ContentRootPath, "wwwroot");
 
-    private static string? GetImageExtension(byte[] bytes)
+    private static int GetImageType(byte[] bytes)
     {
         if (bytes.Length >= 3 && bytes[0] == 0xFF && bytes[1] == 0xD8 && bytes[2] == 0xFF)
-            return ".jpg";
+            return 0;
         if (bytes.Length >= 8 && bytes.AsSpan(0, 8).SequenceEqual(new byte[] { 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A }))
-            return ".png";
+            return 1;
         if (bytes.Length >= 12 &&
             System.Text.Encoding.ASCII.GetString(bytes, 0, 4) == "RIFF" &&
             System.Text.Encoding.ASCII.GetString(bytes, 8, 4) == "WEBP")
-            return ".webp";
-        return null;
+            return 2;
+        return -1;
     }
 
     private static void DeleteStoredPhoto(string? photoUrl, string webRoot)
@@ -168,8 +178,11 @@ public sealed class PerfilController(
         if (string.IsNullOrWhiteSpace(fileName))
             return;
 
-        var path = Path.Combine(webRoot, "uploads", "perfiles", fileName);
-        if (System.IO.File.Exists(path))
+        var baseDirectory = Path.GetFullPath(Path.Combine(webRoot, "uploads", "perfiles"));
+        if (!baseDirectory.EndsWith(Path.DirectorySeparatorChar))
+            baseDirectory += Path.DirectorySeparatorChar;
+        var path = Path.GetFullPath(Path.Combine(baseDirectory, fileName));
+        if (path.StartsWith(baseDirectory, StringComparison.Ordinal) && System.IO.File.Exists(path))
             System.IO.File.Delete(path);
     }
 }

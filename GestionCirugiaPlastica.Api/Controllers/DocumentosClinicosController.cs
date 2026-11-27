@@ -14,23 +14,28 @@ public sealed class DocumentosClinicosController(IDbContextFactory<GestionCirugi
 {
     private const long MaxBytes = 20 * 1024 * 1024;
 
-    private static string? ResolveExtension(string? contentType)
-    {
-        if (string.Equals(contentType, "application/pdf", StringComparison.OrdinalIgnoreCase)) return ".pdf";
-        if (string.Equals(contentType, "image/jpeg", StringComparison.OrdinalIgnoreCase)) return ".jpg";
-        if (string.Equals(contentType, "image/png", StringComparison.OrdinalIgnoreCase)) return ".png";
-        if (string.Equals(contentType, "image/webp", StringComparison.OrdinalIgnoreCase)) return ".webp";
-        return null;
-    }
-
     [HttpPost("paciente/{pacienteId:int}")]
     [RequestSizeLimit(21 * 1024 * 1024)]
     public async Task<IActionResult> Subir(int pacienteId, IFormFile archivo, [FromForm] string categoria, [FromForm] string? descripcion, [FromForm] int? cirugiaId, [FromForm] int? consultaId)
     {
         if (archivo is null || archivo.Length == 0) return BadRequest(new { message = "Selecciona un documento." });
         if (archivo.Length > MaxBytes) return BadRequest(new { message = "El documento no puede superar 20 MB." });
-        var extension = ResolveExtension(archivo.ContentType);
-        if (extension is null) return BadRequest(new { message = "Formato permitido: PDF, JPEG, PNG o WebP." });
+        var fileType = archivo.ContentType?.ToLowerInvariant() switch
+        {
+            "application/pdf" => 0,
+            "image/jpeg" => 1,
+            "image/png" => 2,
+            "image/webp" => 3,
+            _ => -1
+        };
+        if (fileType < 0) return BadRequest(new { message = "Formato permitido: PDF, JPEG, PNG o WebP." });
+        var extension = fileType switch
+        {
+            0 => ".pdf",
+            1 => ".jpg",
+            2 => ".png",
+            _ => ".webp"
+        };
         var categorias = new[] { "Laboratorio", "Estudio", "Consentimiento", "Otro" };
         if (!categorias.Contains(categoria, StringComparer.OrdinalIgnoreCase)) return BadRequest(new { message = "Categoría de documento no válida." });
 

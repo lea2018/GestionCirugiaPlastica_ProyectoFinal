@@ -18,14 +18,6 @@ public class FotografiasController(
 {
     private const long MaxImageBytes = 8 * 1024 * 1024;
 
-    private static string? ResolveExtension(string? contentType)
-    {
-        if (string.Equals(contentType, "image/jpeg", StringComparison.OrdinalIgnoreCase)) return ".jpg";
-        if (string.Equals(contentType, "image/png", StringComparison.OrdinalIgnoreCase)) return ".png";
-        if (string.Equals(contentType, "image/webp", StringComparison.OrdinalIgnoreCase)) return ".webp";
-        return null;
-    }
-
     [HttpGet("cirugia/{cirugiaId:int}")]
     public async Task<IActionResult> PorCirugia(int cirugiaId)
     {
@@ -40,8 +32,20 @@ public class FotografiasController(
         if (archivo is null || archivo.Length == 0) return BadRequest(new { message = "Selecciona una imagen." });
         if (archivo.Length > MaxImageBytes) return BadRequest(new { message = "La imagen no puede superar 8 MB." });
 
-        var extension = ResolveExtension(archivo.ContentType);
-        if (extension is null) return BadRequest(new { message = "Formato no permitido. Usa JPEG, PNG o WebP." });
+        var imageType = archivo.ContentType?.ToLowerInvariant() switch
+        {
+            "image/jpeg" => 0,
+            "image/png" => 1,
+            "image/webp" => 2,
+            _ => -1
+        };
+        if (imageType < 0) return BadRequest(new { message = "Formato no permitido. Usa JPEG, PNG o WebP." });
+        var extension = imageType switch
+        {
+            0 => ".jpg",
+            1 => ".png",
+            _ => ".webp"
+        };
 
         await using var db = await contextFactory.CreateDbContextAsync();
         if (!await db.Cirugias.AnyAsync(c => c.CirugiaId == cirugiaId)) return NotFound();
