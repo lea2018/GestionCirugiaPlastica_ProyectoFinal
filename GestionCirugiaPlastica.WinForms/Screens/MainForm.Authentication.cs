@@ -126,9 +126,9 @@ internal partial class MainForm
                 return false;
             }
         }
-        else if (System.Text.RegularExpressions.Regex.IsMatch(value, @"^[\d\+\-\(\)\s]+$"))
+        else if (value.All(c => char.IsAsciiDigit(c) || c is '+' or '-' or '(' or ')' || char.IsWhiteSpace(c)))
         {
-            if (value.Count(char.IsDigit) < 6)
+            if (value.Count(char.IsAsciiDigit) < 6)
             {
                 _loginErrorProvider.SetError(_loginUser, "La cédula o teléfono debe tener al menos 6 dígitos.");
                 return false;

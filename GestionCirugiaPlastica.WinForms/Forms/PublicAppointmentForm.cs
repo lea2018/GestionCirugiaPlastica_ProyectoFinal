@@ -2,7 +2,6 @@ using System.Drawing;
 using System.Net.Http;
 using System.Net.Mail;
 using System.Text.Json;
-using System.Text.RegularExpressions;
 
 namespace GestionCirugiaPlastica.WinForms.Forms;
 
@@ -179,15 +178,15 @@ internal partial class PublicAppointmentForm : Form
 
     private static bool IsValidCedula(string value)
     {
-        if (!Regex.IsMatch(value, @"^[0-9\-]+$")) return false;
-        var digits = value.Count(char.IsDigit);
+        if (!value.All(c => char.IsAsciiDigit(c) || c == '-')) return false;
+        var digits = value.Count(char.IsAsciiDigit);
         return digits is >= 6 and <= 20;
     }
 
     private static bool IsValidPhone(string value)
     {
-        if (!Regex.IsMatch(value, @"^[0-9\+\-\(\)\s]+$")) return false;
-        var digits = value.Count(char.IsDigit);
+        if (!value.All(c => char.IsAsciiDigit(c) || c is '+' or '-' or '(' or ')' || char.IsWhiteSpace(c))) return false;
+        var digits = value.Count(char.IsAsciiDigit);
         return digits is >= 7 and <= 20;
     }
 
