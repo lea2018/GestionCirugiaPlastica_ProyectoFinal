@@ -28,6 +28,10 @@ namespace GestionCirugiaPlastica.WinForms
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
             _root = new Panel();
             _loginCard = new Panel();
             _btnPublicNews = new Button();
@@ -41,6 +45,7 @@ namespace GestionCirugiaPlastica.WinForms
             _loginSubtitle = new Label();
             _loginTitle = new Label();
             _loginBrand = new Label();
+            _loginLogo = new PictureBox();
             _workspacePanel = new Panel();
             _content = new Panel();
             _pageContent = new Panel();
@@ -97,8 +102,10 @@ namespace GestionCirugiaPlastica.WinForms
             _brandSubtitle = new Label();
             _brandTitle = new Label();
             _brandIcon = new Label();
+            _toolTip = new ToolTip(components);
             _root.SuspendLayout();
             _loginCard.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)_loginLogo).BeginInit();
             _workspacePanel.SuspendLayout();
             _content.SuspendLayout();
             _pageContent.SuspendLayout();
@@ -141,10 +148,11 @@ namespace GestionCirugiaPlastica.WinForms
             _loginCard.Controls.Add(_loginSubtitle);
             _loginCard.Controls.Add(_loginTitle);
             _loginCard.Controls.Add(_loginBrand);
-            _loginCard.Location = new Point(442, 110);
+            _loginCard.Controls.Add(_loginLogo);
+            _loginCard.Location = new Point(442, 130);
             _loginCard.Name = "_loginCard";
-            _loginCard.Padding = new Padding(40);
-            _loginCard.Size = new Size(460, 590);
+            _loginCard.Padding = new Padding(42, 24, 42, 32);
+            _loginCard.Size = new Size(460, 530);
             _loginCard.TabIndex = 0;
             // 
             // _btnPublicNews
@@ -155,10 +163,10 @@ namespace GestionCirugiaPlastica.WinForms
             _btnPublicNews.FlatStyle = FlatStyle.Flat;
             _btnPublicNews.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             _btnPublicNews.ForeColor = Color.FromArgb(158, 110, 121);
-            _btnPublicNews.Location = new Point(238, 460);
+            _btnPublicNews.Location = new Point(236, 448);
             _btnPublicNews.Name = "_btnPublicNews";
-            _btnPublicNews.Size = new Size(180, 38);
-            _btnPublicNews.TabIndex = 10;
+            _btnPublicNews.Size = new Size(182, 38);
+            _btnPublicNews.TabIndex = 6;
             _btnPublicNews.Text = "Noticias";
             _btnPublicNews.UseVisualStyleBackColor = false;
             // 
@@ -170,10 +178,10 @@ namespace GestionCirugiaPlastica.WinForms
             _btnPublicBooking.FlatStyle = FlatStyle.Flat;
             _btnPublicBooking.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             _btnPublicBooking.ForeColor = Color.FromArgb(158, 110, 121);
-            _btnPublicBooking.Location = new Point(42, 460);
+            _btnPublicBooking.Location = new Point(42, 448);
             _btnPublicBooking.Name = "_btnPublicBooking";
-            _btnPublicBooking.Size = new Size(180, 38);
-            _btnPublicBooking.TabIndex = 9;
+            _btnPublicBooking.Size = new Size(182, 38);
+            _btnPublicBooking.TabIndex = 5;
             _btnPublicBooking.Text = "Agendar cita";
             _btnPublicBooking.UseVisualStyleBackColor = false;
             // 
@@ -185,10 +193,10 @@ namespace GestionCirugiaPlastica.WinForms
             _btnRegister.FlatStyle = FlatStyle.Flat;
             _btnRegister.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             _btnRegister.ForeColor = Color.FromArgb(158, 110, 121);
-            _btnRegister.Location = new Point(42, 410);
+            _btnRegister.Location = new Point(42, 396);
             _btnRegister.Name = "_btnRegister";
             _btnRegister.Size = new Size(376, 38);
-            _btnRegister.TabIndex = 8;
+            _btnRegister.TabIndex = 4;
             _btnRegister.Text = "Crear cuenta de paciente";
             _btnRegister.UseVisualStyleBackColor = false;
             // 
@@ -199,20 +207,20 @@ namespace GestionCirugiaPlastica.WinForms
             _btnLogin.FlatStyle = FlatStyle.Flat;
             _btnLogin.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             _btnLogin.ForeColor = Color.White;
-            _btnLogin.Location = new Point(42, 350);
+            _btnLogin.Location = new Point(42, 336);
             _btnLogin.Name = "_btnLogin";
-            _btnLogin.Size = new Size(376, 48);
-            _btnLogin.TabIndex = 7;
+            _btnLogin.Size = new Size(376, 46);
+            _btnLogin.TabIndex = 3;
             _btnLogin.Text = "Iniciar sesión";
             _btnLogin.UseVisualStyleBackColor = false;
             // 
             // _loginMessage
             // 
             _loginMessage.ForeColor = Color.Firebrick;
-            _loginMessage.Location = new Point(42, 305);
+            _loginMessage.Location = new Point(42, 282);
             _loginMessage.Name = "_loginMessage";
-            _loginMessage.Size = new Size(376, 42);
-            _loginMessage.TabIndex = 6;
+            _loginMessage.Size = new Size(376, 44);
+            _loginMessage.TabIndex = 11;
             _loginMessage.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // _loginShowPassword
@@ -220,10 +228,10 @@ namespace GestionCirugiaPlastica.WinForms
             _loginShowPassword.BackColor = Color.Transparent;
             _loginShowPassword.Cursor = Cursors.Hand;
             _loginShowPassword.ForeColor = Color.FromArgb(158, 154, 155);
-            _loginShowPassword.Location = new Point(346, 256);
+            _loginShowPassword.Location = new Point(338, 245);
             _loginShowPassword.Name = "_loginShowPassword";
-            _loginShowPassword.Size = new Size(72, 28);
-            _loginShowPassword.TabIndex = 5;
+            _loginShowPassword.Size = new Size(80, 26);
+            _loginShowPassword.TabIndex = 2;
             _loginShowPassword.Text = "Mostrar";
             _loginShowPassword.UseVisualStyleBackColor = false;
             // 
@@ -232,11 +240,11 @@ namespace GestionCirugiaPlastica.WinForms
             _loginPassword.BackColor = Color.White;
             _loginPassword.Font = new Font("Segoe UI", 11F);
             _loginPassword.ForeColor = Color.FromArgb(54, 56, 58);
-            _loginPassword.Location = new Point(42, 250);
+            _loginPassword.Location = new Point(42, 244);
             _loginPassword.Name = "_loginPassword";
             _loginPassword.PlaceholderText = "Contraseña";
-            _loginPassword.Size = new Size(296, 27);
-            _loginPassword.TabIndex = 4;
+            _loginPassword.Size = new Size(288, 27);
+            _loginPassword.TabIndex = 1;
             _loginPassword.UseSystemPasswordChar = true;
             // 
             // _loginUser
@@ -244,19 +252,19 @@ namespace GestionCirugiaPlastica.WinForms
             _loginUser.BackColor = Color.White;
             _loginUser.Font = new Font("Segoe UI", 11F);
             _loginUser.ForeColor = Color.FromArgb(54, 56, 58);
-            _loginUser.Location = new Point(42, 190);
+            _loginUser.Location = new Point(42, 200);
             _loginUser.Name = "_loginUser";
             _loginUser.PlaceholderText = "Usuario, correo, cédula o teléfono";
             _loginUser.Size = new Size(376, 27);
-            _loginUser.TabIndex = 3;
+            _loginUser.TabIndex = 0;
             // 
             // _loginSubtitle
             // 
             _loginSubtitle.ForeColor = Color.FromArgb(158, 154, 155);
-            _loginSubtitle.Location = new Point(0, 128);
+            _loginSubtitle.Location = new Point(0, 158);
             _loginSubtitle.Name = "_loginSubtitle";
-            _loginSubtitle.Size = new Size(460, 26);
-            _loginSubtitle.TabIndex = 2;
+            _loginSubtitle.Size = new Size(460, 24);
+            _loginSubtitle.TabIndex = 10;
             _loginSubtitle.Text = "Accede al sistema de gestión clínica";
             _loginSubtitle.TextAlign = ContentAlignment.MiddleCenter;
             // 
@@ -264,10 +272,10 @@ namespace GestionCirugiaPlastica.WinForms
             // 
             _loginTitle.Font = new Font("Segoe UI", 26F, FontStyle.Bold);
             _loginTitle.ForeColor = Color.FromArgb(54, 56, 58);
-            _loginTitle.Location = new Point(0, 78);
+            _loginTitle.Location = new Point(0, 112);
             _loginTitle.Name = "_loginTitle";
-            _loginTitle.Size = new Size(460, 46);
-            _loginTitle.TabIndex = 1;
+            _loginTitle.Size = new Size(460, 44);
+            _loginTitle.TabIndex = 9;
             _loginTitle.Text = "Bienvenido";
             _loginTitle.TextAlign = ContentAlignment.MiddleCenter;
             // 
@@ -275,12 +283,22 @@ namespace GestionCirugiaPlastica.WinForms
             // 
             _loginBrand.Font = new Font("Segoe UI", 13F, FontStyle.Bold);
             _loginBrand.ForeColor = Color.FromArgb(158, 110, 121);
-            _loginBrand.Location = new Point(0, 38);
+            _loginBrand.Location = new Point(0, 84);
             _loginBrand.Name = "_loginBrand";
             _loginBrand.Size = new Size(460, 26);
-            _loginBrand.TabIndex = 0;
+            _loginBrand.TabIndex = 8;
             _loginBrand.Text = "TANGER CLINIC";
             _loginBrand.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // _loginLogo
+            // 
+            _loginLogo.BackColor = Color.FromArgb(158, 110, 121);
+            _loginLogo.Location = new Point(204, 24);
+            _loginLogo.Name = "_loginLogo";
+            _loginLogo.Size = new Size(52, 52);
+            _loginLogo.SizeMode = PictureBoxSizeMode.Zoom;
+            _loginLogo.TabIndex = 7;
+            _loginLogo.TabStop = false;
             // 
             // _workspacePanel
             // 
@@ -324,10 +342,31 @@ namespace GestionCirugiaPlastica.WinForms
             // 
             _mainGrid.AllowUserToAddRows = false;
             _mainGrid.AllowUserToDeleteRows = false;
+            dataGridViewCellStyle1.BackColor = Color.FromArgb(248, 233, 237);
+            dataGridViewCellStyle1.ForeColor = Color.FromArgb(54, 56, 58);
+            dataGridViewCellStyle1.SelectionBackColor = Color.FromArgb(158, 110, 121);
+            dataGridViewCellStyle1.SelectionForeColor = Color.White;
+            _mainGrid.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             _mainGrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             _mainGrid.BackgroundColor = Color.White;
             _mainGrid.BorderStyle = BorderStyle.None;
+            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = Color.FromArgb(158, 110, 121);
+            dataGridViewCellStyle2.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
+            dataGridViewCellStyle2.ForeColor = Color.White;
+            dataGridViewCellStyle2.SelectionBackColor = Color.FromArgb(158, 110, 121);
+            dataGridViewCellStyle2.SelectionForeColor = Color.White;
+            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True;
+            _mainGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             _mainGrid.ColumnHeadersHeight = 44;
+            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = Color.White;
+            dataGridViewCellStyle3.Font = new Font("Segoe UI", 10F);
+            dataGridViewCellStyle3.ForeColor = Color.FromArgb(54, 56, 58);
+            dataGridViewCellStyle3.SelectionBackColor = Color.FromArgb(158, 110, 121);
+            dataGridViewCellStyle3.SelectionForeColor = Color.White;
+            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.False;
+            _mainGrid.DefaultCellStyle = dataGridViewCellStyle3;
             _mainGrid.Dock = DockStyle.Fill;
             _mainGrid.EnableHeadersVisualStyles = false;
             _mainGrid.GridColor = Color.FromArgb(235, 231, 230);
@@ -396,8 +435,9 @@ namespace GestionCirugiaPlastica.WinForms
             _btnToolbarAdd.Location = new Point(279, 8);
             _btnToolbarAdd.Name = "_btnToolbarAdd";
             _btnToolbarAdd.Size = new Size(175, 46);
-            _btnToolbarAdd.TabIndex = 4;
+            _btnToolbarAdd.TabIndex = 2;
             _btnToolbarAdd.Text = "+  Nuevo paciente";
+            _toolTip.SetToolTip(_btnToolbarAdd, "Crear un nuevo registro en la sección actual");
             _btnToolbarAdd.UseVisualStyleBackColor = false;
             // 
             // _btnToolbarAddProcedure
@@ -413,6 +453,7 @@ namespace GestionCirugiaPlastica.WinForms
             _btnToolbarAddProcedure.Size = new Size(165, 46);
             _btnToolbarAddProcedure.TabIndex = 3;
             _btnToolbarAddProcedure.Text = "+  Procedimiento";
+            _toolTip.SetToolTip(_btnToolbarAddProcedure, "Agregar un nuevo tipo de procedimiento al catálogo");
             _btnToolbarAddProcedure.UseVisualStyleBackColor = false;
             _btnToolbarAddProcedure.Visible = false;
             // 
@@ -427,8 +468,9 @@ namespace GestionCirugiaPlastica.WinForms
             _btnToolbarRefresh.Location = new Point(619, 8);
             _btnToolbarRefresh.Name = "_btnToolbarRefresh";
             _btnToolbarRefresh.Size = new Size(120, 46);
-            _btnToolbarRefresh.TabIndex = 2;
+            _btnToolbarRefresh.TabIndex = 4;
             _btnToolbarRefresh.Text = "Actualizar";
+            _toolTip.SetToolTip(_btnToolbarRefresh, "Recargar los datos de la sección actual");
             _btnToolbarRefresh.UseVisualStyleBackColor = false;
             // 
             // _surgeryStatusFilterCombo
@@ -443,6 +485,7 @@ namespace GestionCirugiaPlastica.WinForms
             _surgeryStatusFilterCombo.Name = "_surgeryStatusFilterCombo";
             _surgeryStatusFilterCombo.Size = new Size(235, 25);
             _surgeryStatusFilterCombo.TabIndex = 1;
+            _toolTip.SetToolTip(_surgeryStatusFilterCombo, "Filtrar cirugías por estado clínico");
             _surgeryStatusFilterCombo.Visible = false;
             // 
             // _sectionSearch
@@ -456,6 +499,7 @@ namespace GestionCirugiaPlastica.WinForms
             _sectionSearch.PlaceholderText = "Buscar en la lista…";
             _sectionSearch.Size = new Size(310, 25);
             _sectionSearch.TabIndex = 0;
+            _toolTip.SetToolTip(_sectionSearch, "Filtrar registros visibles en la lista actual");
             // 
             // _sectionHeader
             // 
@@ -481,6 +525,7 @@ namespace GestionCirugiaPlastica.WinForms
             _btnHeaderNewSurgery.Size = new Size(150, 40);
             _btnHeaderNewSurgery.TabIndex = 2;
             _btnHeaderNewSurgery.Text = "Nueva cirugía";
+            _toolTip.SetToolTip(_btnHeaderNewSurgery, "Programar una nueva cirugía");
             _btnHeaderNewSurgery.UseVisualStyleBackColor = false;
             _btnHeaderNewSurgery.Visible = false;
             // 
@@ -631,6 +676,7 @@ namespace GestionCirugiaPlastica.WinForms
             _btnNextMonth.Size = new Size(42, 38);
             _btnNextMonth.TabIndex = 1;
             _btnNextMonth.Text = "›";
+            _toolTip.SetToolTip(_btnNextMonth, "Mes siguiente en el calendario");
             _btnNextMonth.UseVisualStyleBackColor = false;
             // 
             // _btnPrevMonth
@@ -647,6 +693,7 @@ namespace GestionCirugiaPlastica.WinForms
             _btnPrevMonth.Size = new Size(42, 38);
             _btnPrevMonth.TabIndex = 0;
             _btnPrevMonth.Text = "‹";
+            _toolTip.SetToolTip(_btnPrevMonth, "Mes anterior en el calendario");
             _btnPrevMonth.UseVisualStyleBackColor = false;
             // 
             // _calendarTitle
@@ -698,6 +745,7 @@ namespace GestionCirugiaPlastica.WinForms
             _btnRightLogout.Size = new Size(90, 90);
             _btnRightLogout.TabIndex = 1;
             _btnRightLogout.Text = "Salir";
+            _toolTip.SetToolTip(_btnRightLogout, "Cerrar sesión y volver al inicio");
             _btnRightLogout.UseVisualStyleBackColor = false;
             // 
             // _btnRightProfile
@@ -713,6 +761,7 @@ namespace GestionCirugiaPlastica.WinForms
             _btnRightProfile.Size = new Size(104, 90);
             _btnRightProfile.TabIndex = 0;
             _btnRightProfile.Text = "Mi perfil";
+            _toolTip.SetToolTip(_btnRightProfile, "Consultar y editar mi perfil de usuario");
             _btnRightProfile.UseVisualStyleBackColor = false;
             _btnRightProfile.Click += _btnRightProfile_Click;
             // 
@@ -772,6 +821,7 @@ namespace GestionCirugiaPlastica.WinForms
             _navResumen.Tag = "Resumen";
             _navResumen.Text = "◈   Resumen";
             _navResumen.TextAlign = ContentAlignment.MiddleLeft;
+            _toolTip.SetToolTip(_navResumen, "Panel general de actividad y métricas");
             _navResumen.UseVisualStyleBackColor = false;
             // 
             // _navAgenda
@@ -790,6 +840,7 @@ namespace GestionCirugiaPlastica.WinForms
             _navAgenda.Tag = "Agenda";
             _navAgenda.Text = "▦   Agenda";
             _navAgenda.TextAlign = ContentAlignment.MiddleLeft;
+            _toolTip.SetToolTip(_navAgenda, "Gestionar citas y agenda clínica");
             _navAgenda.UseVisualStyleBackColor = false;
             _navAgenda.Click += _navAgenda_Click;
             // 
@@ -809,6 +860,7 @@ namespace GestionCirugiaPlastica.WinForms
             _navPacientes.Tag = "Pacientes";
             _navPacientes.Text = "♙   Pacientes";
             _navPacientes.TextAlign = ContentAlignment.MiddleLeft;
+            _toolTip.SetToolTip(_navPacientes, "Directorio y gestión de pacientes");
             _navPacientes.UseVisualStyleBackColor = false;
             // 
             // _navPagos
@@ -827,6 +879,7 @@ namespace GestionCirugiaPlastica.WinForms
             _navPagos.Tag = "Pagos";
             _navPagos.Text = "$   Pagos";
             _navPagos.TextAlign = ContentAlignment.MiddleLeft;
+            _toolTip.SetToolTip(_navPagos, "Registro y control de pagos");
             _navPagos.UseVisualStyleBackColor = false;
             // 
             // _navCirugias
@@ -845,6 +898,7 @@ namespace GestionCirugiaPlastica.WinForms
             _navCirugias.Tag = "Cirugías";
             _navCirugias.Text = "✚   Cirugías";
             _navCirugias.TextAlign = ContentAlignment.MiddleLeft;
+            _toolTip.SetToolTip(_navCirugias, "Control y seguimiento de cirugías");
             _navCirugias.UseVisualStyleBackColor = false;
             // 
             // _navRecetas
@@ -863,6 +917,7 @@ namespace GestionCirugiaPlastica.WinForms
             _navRecetas.Tag = "Recetas";
             _navRecetas.Text = "Rx   Recetas";
             _navRecetas.TextAlign = ContentAlignment.MiddleLeft;
+            _toolTip.SetToolTip(_navRecetas, "Emitir y consultar recetas médicas");
             _navRecetas.UseVisualStyleBackColor = false;
             // 
             // _navAseguradoras
@@ -881,6 +936,7 @@ namespace GestionCirugiaPlastica.WinForms
             _navAseguradoras.Tag = "Aseguradoras";
             _navAseguradoras.Text = "♡   Aseguradoras";
             _navAseguradoras.TextAlign = ContentAlignment.MiddleLeft;
+            _toolTip.SetToolTip(_navAseguradoras, "Catálogo de aseguradoras médicas");
             _navAseguradoras.UseVisualStyleBackColor = false;
             // 
             // _navConfiguracion
@@ -899,6 +955,7 @@ namespace GestionCirugiaPlastica.WinForms
             _navConfiguracion.Tag = "Configuración";
             _navConfiguracion.Text = "⚙   Configuración";
             _navConfiguracion.TextAlign = ContentAlignment.MiddleLeft;
+            _toolTip.SetToolTip(_navConfiguracion, "Configuración de usuarios, roles y gastos");
             _navConfiguracion.UseVisualStyleBackColor = false;
             // 
             // _navExpedientes
@@ -917,6 +974,7 @@ namespace GestionCirugiaPlastica.WinForms
             _navExpedientes.Tag = "Expedientes";
             _navExpedientes.Text = "▤   Expedientes";
             _navExpedientes.TextAlign = ContentAlignment.MiddleLeft;
+            _toolTip.SetToolTip(_navExpedientes, "Consultar expedientes clínicos de pacientes");
             _navExpedientes.UseVisualStyleBackColor = false;
             // 
             // _navInicio
@@ -935,6 +993,7 @@ namespace GestionCirugiaPlastica.WinForms
             _navInicio.Tag = "Inicio";
             _navInicio.Text = "◈   Inicio";
             _navInicio.TextAlign = ContentAlignment.MiddleLeft;
+            _toolTip.SetToolTip(_navInicio, "Resumen de inicio para paciente");
             _navInicio.UseVisualStyleBackColor = false;
             // 
             // _navMiPortal
@@ -953,6 +1012,7 @@ namespace GestionCirugiaPlastica.WinForms
             _navMiPortal.Tag = "Mi perfil, citas y recetas";
             _navMiPortal.Text = "○   Mi perfil, citas y recetas";
             _navMiPortal.TextAlign = ContentAlignment.MiddleLeft;
+            _toolTip.SetToolTip(_navMiPortal, "Ver mi perfil, citas y recetas");
             _navMiPortal.UseVisualStyleBackColor = false;
             // 
             // _navNotificaciones
@@ -971,6 +1031,7 @@ namespace GestionCirugiaPlastica.WinForms
             _navNotificaciones.Tag = "Notificaciones";
             _navNotificaciones.Text = "♧   Notificaciones";
             _navNotificaciones.TextAlign = ContentAlignment.MiddleLeft;
+            _toolTip.SetToolTip(_navNotificaciones, "Ver notificaciones del sistema");
             _navNotificaciones.UseVisualStyleBackColor = false;
             // 
             // _navNoticias
@@ -989,6 +1050,7 @@ namespace GestionCirugiaPlastica.WinForms
             _navNoticias.Tag = "Noticias";
             _navNoticias.Text = "N   Noticias";
             _navNoticias.TextAlign = ContentAlignment.MiddleLeft;
+            _toolTip.SetToolTip(_navNoticias, "Ver noticias y novedades de la clínica");
             _navNoticias.UseVisualStyleBackColor = false;
             // 
             // _sidebarFooter
@@ -1020,6 +1082,7 @@ namespace GestionCirugiaPlastica.WinForms
             _btnSidebarLogout.TabIndex = 2;
             _btnSidebarLogout.Text = "↪   Cerrar sesión";
             _btnSidebarLogout.TextAlign = ContentAlignment.MiddleLeft;
+            _toolTip.SetToolTip(_btnSidebarLogout, "Cerrar sesión actual");
             _btnSidebarLogout.UseVisualStyleBackColor = false;
             // 
             // _footerRoleLabel
@@ -1116,6 +1179,7 @@ namespace GestionCirugiaPlastica.WinForms
             _root.ResumeLayout(false);
             _loginCard.ResumeLayout(false);
             _loginCard.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)_loginLogo).EndInit();
             _workspacePanel.ResumeLayout(false);
             _content.ResumeLayout(false);
             _pageContent.ResumeLayout(false);
@@ -1140,6 +1204,7 @@ namespace GestionCirugiaPlastica.WinForms
 
         private Panel _root = null!;
         private Panel _loginCard = null!;
+        private PictureBox _loginLogo = null!;
         private Label _loginBrand = null!;
         private Label _loginTitle = null!;
         private Label _loginSubtitle = null!;
@@ -1207,5 +1272,6 @@ namespace GestionCirugiaPlastica.WinForms
         private Label _status = null!;
         private Panel _dynamicHost = null!;
         private DataGridView _mainGrid = null!;
+        private ToolTip _toolTip = null!;
     }
 }

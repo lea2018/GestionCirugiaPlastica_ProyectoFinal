@@ -89,6 +89,7 @@ internal partial class MainForm
     private async Task BuildWorkspace()
     {
         _loginCard.Visible = false;
+        AcceptButton = null;
         _workspacePanel.Visible = true;
         _workspacePanel.BringToFront();
 

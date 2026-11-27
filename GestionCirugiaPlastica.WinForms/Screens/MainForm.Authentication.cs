@@ -19,6 +19,17 @@ internal partial class MainForm
                 CenterLoginCard();
         };
 
+        _loginCard.Paint += (_, e) =>
+            ControlPaint.DrawBorder(e.Graphics, _loginCard.ClientRectangle, ClinicTheme.Border, ButtonBorderStyle.Solid);
+
+        _loginLogo.Paint += (_, e) =>
+        {
+            using var brush = new System.Drawing.Drawing2D.LinearGradientBrush(_loginLogo.ClientRectangle, Mauve, Rose, 35f);
+            e.Graphics.FillRectangle(brush, _loginLogo.ClientRectangle);
+            using var logoFont = new Font("Segoe UI Symbol", 22F, FontStyle.Bold);
+            TextRenderer.DrawText(e.Graphics, "✚", logoFont, _loginLogo.ClientRectangle, Color.White, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
+        };
+
         _loginShowPassword.CheckedChanged += (_, _) =>
             _loginPassword.UseSystemPasswordChar = !_loginShowPassword.Checked;
 
@@ -90,6 +101,7 @@ internal partial class MainForm
         _loginPassword.Text = "";
         _loginShowPassword.Checked = false;
         _loginCard.Visible = true;
+        AcceptButton = _btnLogin;
         CenterLoginCard();
         _loginCard.BringToFront();
         _loginUser.Focus();
