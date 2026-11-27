@@ -3,48 +3,30 @@ using GestionCirugiaPlastica.WinForms;
 
 namespace GestionCirugiaPlastica.WinForms.Controls;
 
-internal sealed class NewsPanel : UserControl
+internal partial class NewsPanel : UserControl
 {
-    private readonly ClinicApiClient _api;
+    private readonly ClinicApiClient _api = null!;
     private readonly bool _canManage;
-    private readonly DataGridView _grid = new();
-    private readonly Label _status = new() { Dock = DockStyle.Bottom, Height = 32, ForeColor = ClinicTheme.Mauve };
     private List<NewsItem> _items = [];
 
-    public NewsPanel(ClinicApiClient api, bool canManage)
+    public NewsPanel()
+    {
+        InitializeComponent();
+    }
+
+    public NewsPanel(ClinicApiClient api, bool canManage) : this()
     {
         _api = api;
         _canManage = canManage;
-        BackColor = Color.White;
-        Padding = new Padding(16);
-        var toolbar = new FlowLayoutPanel { Dock = DockStyle.Top, Height = 48, FlowDirection = FlowDirection.LeftToRight, WrapContents = false };
-        var refresh = CreateButton("Actualizar");
-        refresh.Click += async (_, _) => await LoadAsync();
-        toolbar.Controls.Add(refresh);
-        if (_canManage)
-        {
-            var add = CreateButton("Nueva noticia", true);
-            add.Click += async (_, _) => await EditAsync(null);
-            toolbar.Controls.Add(add);
-        }
-        _grid.Dock = DockStyle.Fill;
-        _grid.ReadOnly = true;
-        _grid.AllowUserToAddRows = false;
-        _grid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-        _grid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-        _grid.MultiSelect = false;
-        _grid.BackgroundColor = Color.White;
-        _grid.BorderStyle = BorderStyle.None;
-        _grid.RowTemplate.Height = 38;
+        _btnAdd.Visible = _canManage;
+        _btnRefresh.Click += async (_, _) => await LoadAsync();
+        _btnAdd.Click += async (_, _) => await EditAsync(null);
         _grid.CellDoubleClick += async (_, e) =>
         {
             if (e.RowIndex < 0 || e.RowIndex >= _items.Count) return;
             if (_canManage) await EditAsync(_items[e.RowIndex]);
             else ShowArticle(_items[e.RowIndex]);
         };
-        Controls.Add(_grid);
-        Controls.Add(_status);
-        Controls.Add(toolbar);
         _ = LoadAsync();
     }
 
@@ -93,14 +75,6 @@ internal sealed class NewsPanel : UserControl
         }
         catch (Exception ex) { MessageBox.Show(FindForm(), ex.Message, "No se pudo guardar la noticia", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
     }
-
-    private static Button CreateButton(string text, bool primary = false) => new()
-    {
-        Text = text, AutoSize = true, Height = 36, Margin = new Padding(0, 0, 8, 6),
-        BackColor = primary ? ClinicTheme.Mauve : Color.White,
-        ForeColor = primary ? Color.White : ClinicTheme.Mauve,
-        FlatStyle = FlatStyle.Flat, Font = new Font("Segoe UI", 9, FontStyle.Bold), Cursor = Cursors.Hand
-    };
 
     private sealed class NewsItem
     {

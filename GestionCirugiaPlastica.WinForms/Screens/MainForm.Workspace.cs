@@ -34,7 +34,6 @@ internal partial class MainForm
             e.Graphics.DrawLine(pen, 0, 0, _sidebarFooter.Width, 0);
         };
 
-        _globalSearch.TextChanged += (_, _) => { if (_grid is not null) ApplySearch(_globalSearch.Text); };
         _btnSidebarLogout.Click += (_, _) => { _api.Logout(); ShowLogin(); };
 
         foreach (Button navButton in _menuFlow.Controls)
@@ -95,7 +94,6 @@ internal partial class MainForm
 
         _topbarWelcome.Text = _api.IsAssistant ? "Área clínica" : _api.IsPatient ? "Mi portal de paciente" : "Bienvenido";
         _topbarCaption.Text = _api.IsAssistant ? "Expedientes y seguimiento médico" : _api.IsPatient ? "Consulta tu perfil, citas y recetas" : "Panel de control del consultorio";
-        _globalSearch.Text = "";
 
         _footerUserLabel.Text = _api.UserName ?? "Usuario";
         _footerRoleLabel.Text = _api.Role ?? "";

@@ -2,23 +2,16 @@ using System.Drawing;
 
 namespace GestionCirugiaPlastica.WinForms;
 
-internal sealed record ChoiceItem(int Id, string Label)
+internal partial class EntityDialog : Form
 {
-    public override string ToString() => Label;
-}
-
-internal sealed class EntityDialog : Form
-{
-    private readonly FlowLayoutPanel _fields;
-    public EntityDialog(string title)
+    public EntityDialog()
     {
-        Text = title; Width = 560; Height = 690; MinimumSize = new Size(520, 480); StartPosition = FormStartPosition.CenterParent;
-        FormBorderStyle = FormBorderStyle.Sizable; MaximizeBox = false; MinimizeBox = false; Font = new Font("Segoe UI", 10); BackColor = Color.White;
-        _fields = new FlowLayoutPanel { Dock = DockStyle.Fill, FlowDirection = FlowDirection.TopDown, WrapContents = false, AutoScroll = true, Padding = new Padding(24), BackColor = Color.White };
-        var buttons = new Panel { Dock = DockStyle.Bottom, Height = 64, Padding = new Padding(20, 10, 20, 10), BackColor = Color.FromArgb(246, 244, 243) };
-        var save = new Button { Text = "Guardar", DialogResult = DialogResult.OK, Dock = DockStyle.Right, Width = 120, BackColor = ClinicTheme.Mauve, ForeColor = Color.White, FlatStyle = FlatStyle.Flat, Font = new Font("Segoe UI", 10, FontStyle.Bold) };
-        var cancel = new Button { Text = "Cancelar", DialogResult = DialogResult.Cancel, Dock = DockStyle.Right, Width = 120, FlatStyle = FlatStyle.Flat, Font = new Font("Segoe UI", 10) };
-        buttons.Controls.Add(save); buttons.Controls.Add(cancel); Controls.Add(_fields); Controls.Add(buttons); AcceptButton = save; CancelButton = cancel;
+        InitializeComponent();
+    }
+
+    public EntityDialog(string title) : this()
+    {
+        Text = title;
     }
 
     public TextBox AddText(string label, string? value = null, bool multiline = false)
@@ -63,4 +56,9 @@ internal sealed class EntityDialog : Form
         var group = new Panel { Width = 490, Height = height, Margin = new Padding(0, 0, 0, 5) };
         group.Controls.Add(new Label { Text = label, Location = Point.Empty, Width = 480, Height = 24, ForeColor = ClinicTheme.Charcoal, Font = new Font("Segoe UI", 9, FontStyle.Bold) }); return group;
     }
+}
+
+internal sealed record ChoiceItem(int Id, string Label)
+{
+    public override string ToString() => Label;
 }

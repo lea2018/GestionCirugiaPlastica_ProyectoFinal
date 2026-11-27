@@ -1,51 +1,31 @@
-using System.Drawing;
-using GestionCirugiaPlastica.WinForms;
-
 namespace GestionCirugiaPlastica.WinForms.Controls;
 
-internal sealed class NotificationsPanel : UserControl
+internal partial class NotificationsPanel : UserControl
 {
-    private readonly ClinicApiClient _api;
-    private readonly DataGridView _grid = new();
-    private readonly Label _status = new() { Dock = DockStyle.Bottom, Height = 32, ForeColor = ClinicTheme.Mauve };
+    private readonly ClinicApiClient _api = null!;
     private List<NotificationItem> _items = [];
 
-    public NotificationsPanel(ClinicApiClient api)
+    public NotificationsPanel()
+    {
+        InitializeComponent();
+    }
+
+    public NotificationsPanel(ClinicApiClient api) : this()
     {
         _api = api;
-        Padding = new Padding(16);
-        BackColor = Color.White;
-        var toolbar = new FlowLayoutPanel { Dock = DockStyle.Top, Height = 48, WrapContents = false };
-        AddButton(toolbar, "Actualizar", async () => await LoadAsync());
-        AddButton(toolbar, "Marcar todas como leídas", async () =>
+        _btnRefresh.Click += async (_, _) => await LoadAsync();
+        _btnMarkAllRead.Click += async (_, _) =>
         {
             try { await _api.PatchAsync("api/Notificaciones/leer-todas"); await LoadAsync(); }
             catch (Exception ex) { _status.Text = ex.Message; }
-        }, true);
-        AddButton(toolbar, "Marcar seleccionada como leída", async () =>
+        };
+        _btnMarkSelectedRead.Click += async (_, _) =>
         {
             if (_grid.CurrentRow?.Index is not int index || index < 0 || index >= _items.Count) return;
             try { await _api.PatchAsync($"api/Notificaciones/{_items[index].NotificacionId}/leer"); await LoadAsync(); }
             catch (Exception ex) { _status.Text = ex.Message; }
-        });
-        _grid.Dock = DockStyle.Fill;
-        _grid.ReadOnly = true;
-        _grid.AllowUserToAddRows = false;
-        _grid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-        _grid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-        _grid.MultiSelect = false;
-        _grid.BackgroundColor = Color.White;
-        _grid.BorderStyle = BorderStyle.None;
-        _grid.RowTemplate.Height = 42;
-        Controls.Add(_grid); Controls.Add(_status); Controls.Add(toolbar);
+        };
         _ = LoadAsync();
-    }
-
-    private static void AddButton(Control parent, string text, Func<Task> action, bool primary = false)
-    {
-        var button = new Button { Text = text, AutoSize = true, Height = 36, Margin = new Padding(0, 0, 8, 6), BackColor = primary ? ClinicTheme.Mauve : Color.White, ForeColor = primary ? Color.White : ClinicTheme.Mauve, FlatStyle = FlatStyle.Flat, Font = new Font("Segoe UI", 9, FontStyle.Bold), Cursor = Cursors.Hand };
-        button.Click += async (_, _) => await action();
-        parent.Controls.Add(button);
     }
 
     private async Task LoadAsync()

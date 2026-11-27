@@ -59,7 +59,6 @@ namespace GestionCirugiaPlastica.WinForms
             _sectionSubtitle = new Label();
             _sectionTitle = new Label();
             _topbar = new Panel();
-            _globalSearch = new TextBox();
             _topbarCaption = new Label();
             _topbarWelcome = new Label();
             _rightPanel = new Panel();
@@ -509,7 +508,6 @@ namespace GestionCirugiaPlastica.WinForms
             // _topbar
             // 
             _topbar.BackColor = Color.White;
-            _topbar.Controls.Add(_globalSearch);
             _topbar.Controls.Add(_topbarCaption);
             _topbar.Controls.Add(_topbarWelcome);
             _topbar.Dock = DockStyle.Top;
@@ -518,17 +516,6 @@ namespace GestionCirugiaPlastica.WinForms
             _topbar.Padding = new Padding(28, 15, 28, 12);
             _topbar.Size = new Size(739, 84);
             _topbar.TabIndex = 1;
-            // 
-            // _globalSearch
-            // 
-            _globalSearch.BackColor = Color.White;
-            _globalSearch.Dock = DockStyle.Right;
-            _globalSearch.ForeColor = Color.FromArgb(54, 56, 58);
-            _globalSearch.Location = new Point(481, 68);
-            _globalSearch.Name = "_globalSearch";
-            _globalSearch.PlaceholderText = "Buscar aquí…";
-            _globalSearch.Size = new Size(230, 25);
-            _globalSearch.TabIndex = 2;
             // 
             // _topbarCaption
             // 
@@ -692,9 +679,9 @@ namespace GestionCirugiaPlastica.WinForms
             _rightProfile.Dock = DockStyle.Top;
             _rightProfile.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             _rightProfile.ForeColor = Color.FromArgb(54, 56, 58);
-            _rightProfile.Location = new Point(110, 6);
+            _rightProfile.Location = new Point(104, 6);
             _rightProfile.Name = "_rightProfile";
-            _rightProfile.Size = new Size(74, 50);
+            _rightProfile.Size = new Size(70, 48);
             _rightProfile.TabIndex = 2;
             _rightProfile.Text = "Usuario\r\nRol";
             // 
@@ -706,9 +693,9 @@ namespace GestionCirugiaPlastica.WinForms
             _btnRightLogout.FlatStyle = FlatStyle.Flat;
             _btnRightLogout.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             _btnRightLogout.ForeColor = Color.FromArgb(158, 110, 121);
-            _btnRightLogout.Location = new Point(184, 6);
+            _btnRightLogout.Location = new Point(174, 6);
             _btnRightLogout.Name = "_btnRightLogout";
-            _btnRightLogout.Size = new Size(80, 90);
+            _btnRightLogout.Size = new Size(90, 90);
             _btnRightLogout.TabIndex = 1;
             _btnRightLogout.Text = "Salir";
             _btnRightLogout.UseVisualStyleBackColor = false;
@@ -723,7 +710,7 @@ namespace GestionCirugiaPlastica.WinForms
             _btnRightProfile.ForeColor = Color.FromArgb(158, 110, 121);
             _btnRightProfile.Location = new Point(0, 6);
             _btnRightProfile.Name = "_btnRightProfile";
-            _btnRightProfile.Size = new Size(110, 90);
+            _btnRightProfile.Size = new Size(104, 90);
             _btnRightProfile.TabIndex = 0;
             _btnRightProfile.Text = "Mi perfil";
             _btnRightProfile.UseVisualStyleBackColor = false;
@@ -1139,7 +1126,6 @@ namespace GestionCirugiaPlastica.WinForms
             _sectionToolbar.PerformLayout();
             _sectionHeader.ResumeLayout(false);
             _topbar.ResumeLayout(false);
-            _topbar.PerformLayout();
             _rightPanel.ResumeLayout(false);
             _monthNavPanel.ResumeLayout(false);
             _rightProfilePanel.ResumeLayout(false);
@@ -1206,7 +1192,6 @@ namespace GestionCirugiaPlastica.WinForms
         private Panel _topbar = null!;
         private Label _topbarWelcome = null!;
         private Label _topbarCaption = null!;
-        private TextBox _globalSearch = null!;
         private Panel _pageContent = null!;
         private Panel _sectionHeader = null!;
         private Label _sectionTitle = null!;
