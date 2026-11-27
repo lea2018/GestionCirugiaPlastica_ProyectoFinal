@@ -147,7 +147,6 @@ namespace GestionCirugiaPlastica.WinForms
             _loginCard.Padding = new Padding(40);
             _loginCard.Size = new Size(460, 590);
             _loginCard.TabIndex = 0;
-            _loginCard.Visible = false;
             // 
             // _btnPublicNews
             // 
@@ -369,7 +368,7 @@ namespace GestionCirugiaPlastica.WinForms
             _status.ForeColor = Color.FromArgb(158, 110, 121);
             _status.Location = new Point(0, 9);
             _status.Name = "_status";
-            _status.Size = new Size(38, 15);
+            _status.Size = new Size(32, 15);
             _status.TabIndex = 0;
             _status.Text = "Listo";
             // 
@@ -525,7 +524,7 @@ namespace GestionCirugiaPlastica.WinForms
             _globalSearch.BackColor = Color.White;
             _globalSearch.Dock = DockStyle.Right;
             _globalSearch.ForeColor = Color.FromArgb(54, 56, 58);
-            _globalSearch.Location = new Point(481, 15);
+            _globalSearch.Location = new Point(481, 68);
             _globalSearch.Name = "_globalSearch";
             _globalSearch.PlaceholderText = "Buscar aquí…";
             _globalSearch.Size = new Size(230, 25);
@@ -552,6 +551,7 @@ namespace GestionCirugiaPlastica.WinForms
             _topbarWelcome.Size = new Size(683, 28);
             _topbarWelcome.TabIndex = 0;
             _topbarWelcome.Text = "Bienvenido";
+            _topbarWelcome.Click += _topbarWelcome_Click;
             // 
             // _rightPanel
             // 
@@ -692,9 +692,9 @@ namespace GestionCirugiaPlastica.WinForms
             _rightProfile.Dock = DockStyle.Top;
             _rightProfile.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             _rightProfile.ForeColor = Color.FromArgb(54, 56, 58);
-            _rightProfile.Location = new Point(0, 6);
+            _rightProfile.Location = new Point(110, 6);
             _rightProfile.Name = "_rightProfile";
-            _rightProfile.Size = new Size(264, 50);
+            _rightProfile.Size = new Size(74, 50);
             _rightProfile.TabIndex = 2;
             _rightProfile.Text = "Usuario\r\nRol";
             // 
@@ -706,9 +706,9 @@ namespace GestionCirugiaPlastica.WinForms
             _btnRightLogout.FlatStyle = FlatStyle.Flat;
             _btnRightLogout.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             _btnRightLogout.ForeColor = Color.FromArgb(158, 110, 121);
-            _btnRightLogout.Location = new Point(184, 56);
+            _btnRightLogout.Location = new Point(184, 6);
             _btnRightLogout.Name = "_btnRightLogout";
-            _btnRightLogout.Size = new Size(80, 40);
+            _btnRightLogout.Size = new Size(80, 90);
             _btnRightLogout.TabIndex = 1;
             _btnRightLogout.Text = "Salir";
             _btnRightLogout.UseVisualStyleBackColor = false;
@@ -721,12 +721,13 @@ namespace GestionCirugiaPlastica.WinForms
             _btnRightProfile.FlatStyle = FlatStyle.Flat;
             _btnRightProfile.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             _btnRightProfile.ForeColor = Color.FromArgb(158, 110, 121);
-            _btnRightProfile.Location = new Point(0, 56);
+            _btnRightProfile.Location = new Point(0, 6);
             _btnRightProfile.Name = "_btnRightProfile";
-            _btnRightProfile.Size = new Size(110, 40);
+            _btnRightProfile.Size = new Size(110, 90);
             _btnRightProfile.TabIndex = 0;
             _btnRightProfile.Text = "Mi perfil";
             _btnRightProfile.UseVisualStyleBackColor = false;
+            _btnRightProfile.Click += _btnRightProfile_Click;
             // 
             // _sidebar
             // 
@@ -803,6 +804,7 @@ namespace GestionCirugiaPlastica.WinForms
             _navAgenda.Text = "▦   Agenda";
             _navAgenda.TextAlign = ContentAlignment.MiddleLeft;
             _navAgenda.UseVisualStyleBackColor = false;
+            _navAgenda.Click += _navAgenda_Click;
             // 
             // _navPacientes
             // 
@@ -1115,7 +1117,7 @@ namespace GestionCirugiaPlastica.WinForms
             // 
             // MainForm
             // 
-            AutoScaleDimensions = new SizeF(8F, 21F);
+            AutoScaleDimensions = new SizeF(7F, 17F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1344, 811);
             Controls.Add(_root);
