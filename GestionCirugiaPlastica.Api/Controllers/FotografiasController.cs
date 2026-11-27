@@ -44,10 +44,14 @@ public class FotografiasController(
         await using var db = await contextFactory.CreateDbContextAsync();
         if (!await db.Cirugias.AnyAsync(c => c.CirugiaId == cirugiaId)) return NotFound();
 
-        var directory = Path.Combine(environment.ContentRootPath, "App_Data", "clinical-images");
-        Directory.CreateDirectory(directory);
+        var baseDirectory = Path.GetFullPath(Path.Combine(environment.ContentRootPath, "App_Data", "clinical-images"));
+        if (!baseDirectory.EndsWith(Path.DirectorySeparatorChar))
+            baseDirectory += Path.DirectorySeparatorChar;
+        Directory.CreateDirectory(baseDirectory);
         var filename = $"{Guid.NewGuid():N}{extension}";
-        var fullPath = Path.Combine(directory, filename);
+        var fullPath = Path.GetFullPath(Path.Combine(baseDirectory, filename));
+        if (!fullPath.StartsWith(baseDirectory, StringComparison.OrdinalIgnoreCase))
+            return BadRequest(new { message = "Ruta de archivo no válida." });
         try
         {
             await using (var stream = System.IO.File.Create(fullPath))

@@ -33,10 +33,14 @@ public sealed class DocumentosClinicosController(IDbContextFactory<GestionCirugi
         if (cirugiaId.HasValue && !await db.Cirugias.AnyAsync(c => c.CirugiaId == cirugiaId && c.PacienteId == pacienteId)) return BadRequest(new { message = "La cirugía no corresponde al paciente." });
         if (consultaId.HasValue && !await db.Consultas.AnyAsync(c => c.ConsultaId == consultaId && c.PacienteId == pacienteId)) return BadRequest(new { message = "La consulta no corresponde al paciente." });
 
-        var directory = Path.Combine(environment.ContentRootPath, "App_Data", "clinical-documents");
-        Directory.CreateDirectory(directory);
+        var baseDirectory = Path.GetFullPath(Path.Combine(environment.ContentRootPath, "App_Data", "clinical-documents"));
+        if (!baseDirectory.EndsWith(Path.DirectorySeparatorChar))
+            baseDirectory += Path.DirectorySeparatorChar;
+        Directory.CreateDirectory(baseDirectory);
         var filename = $"{Guid.NewGuid():N}{extension}";
-        var path = Path.Combine(directory, filename);
+        var path = Path.GetFullPath(Path.Combine(baseDirectory, filename));
+        if (!path.StartsWith(baseDirectory, StringComparison.OrdinalIgnoreCase))
+            return BadRequest(new { message = "Ruta de archivo no válida." });
         try
         {
             await using (var output = System.IO.File.Create(path)) await archivo.CopyToAsync(output);
