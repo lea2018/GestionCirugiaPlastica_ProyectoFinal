@@ -103,9 +103,11 @@ namespace GestionCirugiaPlastica.WinForms
             _brandTitle = new Label();
             _brandIcon = new Label();
             _toolTip = new ToolTip(components);
+            _loginErrorProvider = new ErrorProvider(components);
             _root.SuspendLayout();
             _loginCard.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)_loginLogo).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)_loginErrorProvider).BeginInit();
             _workspacePanel.SuspendLayout();
             _content.SuspendLayout();
             _pageContent.SuspendLayout();
@@ -1165,6 +1167,8 @@ namespace GestionCirugiaPlastica.WinForms
             _brandIcon.TabIndex = 0;
             _brandIcon.TextAlign = ContentAlignment.MiddleCenter;
             // 
+            _loginErrorProvider.BlinkStyle = ErrorBlinkStyle.NeverBlink;
+            _loginErrorProvider.ContainerControl = this;
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 17F);
@@ -1180,6 +1184,7 @@ namespace GestionCirugiaPlastica.WinForms
             _loginCard.ResumeLayout(false);
             _loginCard.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)_loginLogo).EndInit();
+            ((System.ComponentModel.ISupportInitialize)_loginErrorProvider).EndInit();
             _workspacePanel.ResumeLayout(false);
             _content.ResumeLayout(false);
             _pageContent.ResumeLayout(false);
@@ -1273,5 +1278,6 @@ namespace GestionCirugiaPlastica.WinForms
         private Panel _dynamicHost = null!;
         private DataGridView _mainGrid = null!;
         private ToolTip _toolTip = null!;
+        private ErrorProvider _loginErrorProvider = null!;
     }
 }

@@ -16,20 +16,34 @@ internal partial class NotificationsPanel : UserControl
         _btnRefresh.Click += async (_, _) => await LoadAsync();
         _btnMarkAllRead.Click += async (_, _) =>
         {
+            SetBusy(true, "Marcando todas como leídas...");
             try { await _api.PatchAsync("api/Notificaciones/leer-todas"); await LoadAsync(); }
             catch (Exception ex) { _status.Text = ex.Message; }
+            finally { SetBusy(false); }
         };
         _btnMarkSelectedRead.Click += async (_, _) =>
         {
             if (_grid.CurrentRow?.Index is not int index || index < 0 || index >= _items.Count) return;
+            SetBusy(true, "Guardando estado de notificación...");
             try { await _api.PatchAsync($"api/Notificaciones/{_items[index].NotificacionId}/leer"); await LoadAsync(); }
             catch (Exception ex) { _status.Text = ex.Message; }
+            finally { SetBusy(false); }
         };
         _ = LoadAsync();
     }
 
+    private void SetBusy(bool busy, string? statusMessage = null)
+    {
+        _btnRefresh.Enabled = !busy;
+        _btnMarkAllRead.Enabled = !busy;
+        _btnMarkSelectedRead.Enabled = !busy;
+        if (statusMessage is not null)
+            _status.Text = statusMessage;
+    }
+
     private async Task LoadAsync()
     {
+        SetBusy(true, "Cargando notificaciones...");
         try
         {
             _items = await _api.GetAsync<List<NotificationItem>>("api/Notificaciones");
@@ -37,6 +51,7 @@ internal partial class NotificationsPanel : UserControl
             _status.Text = $"{_items.Count(x => !x.Leida)} notificaciones sin leer de {_items.Count}.";
         }
         catch (Exception ex) { _status.Text = ex.Message; }
+        finally { SetBusy(false); }
     }
 
     private sealed class NotificationItem

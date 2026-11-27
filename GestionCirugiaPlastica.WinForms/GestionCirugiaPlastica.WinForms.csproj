@@ -40,8 +40,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Remove="Screens\MainForm.*.resx" />
-    <EmbeddedResource Include="Screens\MainForm.DashboardAndLists.resx" />
-    <EmbeddedResource Include="Screens\MainForm.Workspace.resx" />
     <None Update="appsettings.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>

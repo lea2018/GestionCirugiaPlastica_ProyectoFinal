@@ -30,8 +30,17 @@ internal partial class NewsPanel : UserControl
         _ = LoadAsync();
     }
 
+    private void SetBusy(bool busy, string? statusMessage = null)
+    {
+        _btnRefresh.Enabled = !busy;
+        _btnAdd.Enabled = !busy;
+        if (statusMessage is not null)
+            _status.Text = statusMessage;
+    }
+
     private async Task LoadAsync()
     {
+        SetBusy(true, "Cargando noticias...");
         try
         {
             _items = (await _api.GetAsync<List<NewsItem>>(_canManage ? "api/Noticias/admin" : "api/Noticias"))
@@ -41,6 +50,7 @@ internal partial class NewsPanel : UserControl
             _status.Text = $"{_items.Count} noticias. Doble clic para editar o cambiar publicación.";
         }
         catch (Exception ex) { _status.Text = ex.Message; }
+        finally { SetBusy(false); }
     }
 
     private void ShowArticle(NewsItem item)
@@ -66,6 +76,7 @@ internal partial class NewsPanel : UserControl
             MessageBox.Show(FindForm(), "Completa el título y el contenido, y respeta las longitudes máximas.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Information);
             return;
         }
+        SetBusy(true, "Guardando noticia...");
         try
         {
             var payload = new NewsRequest(title.Text.Trim(), string.IsNullOrWhiteSpace(summary.Text) ? null : summary.Text.Trim(), content.Text.Trim(), published.Checked);
@@ -73,7 +84,12 @@ internal partial class NewsPanel : UserControl
             else await _api.SendAsync(HttpMethod.Put, $"api/Noticias/{item.NoticiaId}", payload);
             await LoadAsync();
         }
-        catch (Exception ex) { MessageBox.Show(FindForm(), ex.Message, "No se pudo guardar la noticia", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
+        catch (Exception ex)
+        {
+            _status.Text = ex.Message;
+            MessageBox.Show(FindForm(), ex.Message, "No se pudo guardar la noticia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+        finally { SetBusy(false); }
     }
 
     private sealed class NewsItem

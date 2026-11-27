@@ -28,6 +28,8 @@ namespace GestionCirugiaPlastica.WinForms.Forms
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
+            _errorProvider = new ErrorProvider(components);
             _headerPanel = new Panel();
             _headerTitleLabel = new Label();
             _headerSubtitleLabel = new Label();
@@ -78,6 +80,7 @@ namespace GestionCirugiaPlastica.WinForms.Forms
             _pnlCancelPhone = new Panel();
             _cancelPhone = new TextBox();
             _lblCancelPhone = new Label();
+            ((System.ComponentModel.ISupportInitialize)_errorProvider).BeginInit();
             _headerPanel.SuspendLayout();
             _tabs.SuspendLayout();
             _bookingTab.SuspendLayout();
@@ -725,6 +728,8 @@ namespace GestionCirugiaPlastica.WinForms.Forms
             _lblCancelPhone.TabIndex = 0;
             _lblCancelPhone.Text = "Teléfono";
             // 
+            _errorProvider.BlinkStyle = ErrorBlinkStyle.NeverBlink;
+            _errorProvider.ContainerControl = this;
             // PublicAppointmentForm
             // 
             AutoScaleDimensions = new SizeF(7F, 17F);
@@ -773,6 +778,7 @@ namespace GestionCirugiaPlastica.WinForms.Forms
             _pnlCancelId.PerformLayout();
             _pnlCancelPhone.ResumeLayout(false);
             _pnlCancelPhone.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)_errorProvider).EndInit();
             ResumeLayout(false);
         }
 
@@ -828,5 +834,6 @@ namespace GestionCirugiaPlastica.WinForms.Forms
         private FlowLayoutPanel _cancelActions = null!;
         private Button _cancelButton = null!;
         private Label _cancelMessage = null!;
+        private ErrorProvider _errorProvider = null!;
     }
 }

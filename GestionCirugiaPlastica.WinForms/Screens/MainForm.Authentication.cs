@@ -33,15 +33,22 @@ internal partial class MainForm
         _loginShowPassword.CheckedChanged += (_, _) =>
             _loginPassword.UseSystemPasswordChar = !_loginShowPassword.Checked;
 
+        _loginErrorProvider.SetIconPadding(_loginUser, -20);
+        _loginErrorProvider.SetIconPadding(_loginPassword, -20);
+
+        _loginUser.TextChanged += (_, _) => ValidateLoginUser();
+        _loginUser.Leave += (_, _) => ValidateLoginUser();
+        _loginPassword.TextChanged += (_, _) => ValidateLoginPassword();
+        _loginPassword.Leave += (_, _) => ValidateLoginPassword();
+
         _btnLogin.Click += async (_, _) =>
         {
             var identifier = _loginUser.Text.Trim();
 
-            if (string.IsNullOrWhiteSpace(identifier) ||
-                string.IsNullOrWhiteSpace(_loginPassword.Text))
+            if (!ValidateLoginInputs())
             {
                 _loginMessage.ForeColor = Color.Firebrick;
-                _loginMessage.Text = "Ingresa tu usuario (o correo) y contraseña.";
+                _loginMessage.Text = "Corrige los campos marcados para iniciar sesión.";
                 return;
             }
 
@@ -52,6 +59,7 @@ internal partial class MainForm
             try
             {
                 await _api.LoginAsync(identifier, _loginPassword.Text);
+                _loginErrorProvider.Clear();
                 await BuildWorkspace();
             }
             catch (Exception ex)
@@ -94,12 +102,61 @@ internal partial class MainForm
         };
     }
 
+    private bool ValidateLoginInputs()
+    {
+        var userOk = ValidateLoginUser();
+        var passOk = ValidateLoginPassword();
+        return userOk && passOk;
+    }
+
+    private bool ValidateLoginUser()
+    {
+        var value = _loginUser.Text.Trim();
+        if (value.Length == 0)
+        {
+            _loginErrorProvider.SetError(_loginUser, "Ingresa tu usuario, correo, cédula o teléfono.");
+            return false;
+        }
+        if (value.Contains('@'))
+        {
+            if (!System.Net.Mail.MailAddress.TryCreate(value, out var parsed) ||
+                parsed.Address.IndexOf('.', parsed.Address.IndexOf('@')) <= parsed.Address.IndexOf('@') + 1)
+            {
+                _loginErrorProvider.SetError(_loginUser, "El correo electrónico no tiene un formato válido.");
+                return false;
+            }
+        }
+        else if (System.Text.RegularExpressions.Regex.IsMatch(value, @"^[\d\+\-\(\)\s]+$"))
+        {
+            if (value.Count(char.IsDigit) < 6)
+            {
+                _loginErrorProvider.SetError(_loginUser, "La cédula o teléfono debe tener al menos 6 dígitos.");
+                return false;
+            }
+        }
+
+        _loginErrorProvider.SetError(_loginUser, "");
+        return true;
+    }
+
+    private bool ValidateLoginPassword()
+    {
+        if (string.IsNullOrWhiteSpace(_loginPassword.Text))
+        {
+            _loginErrorProvider.SetError(_loginPassword, "Ingresa tu contraseña.");
+            return false;
+        }
+        _loginErrorProvider.SetError(_loginPassword, "");
+        return true;
+    }
+
     private void ShowLogin()
     {
         _workspacePanel.Visible = false;
         _loginMessage.Text = "";
         _loginPassword.Text = "";
         _loginShowPassword.Checked = false;
+        _loginErrorProvider.Clear();
         _loginCard.Visible = true;
         AcceptButton = _btnLogin;
         CenterLoginCard();
