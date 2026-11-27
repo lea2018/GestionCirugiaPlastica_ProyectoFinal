@@ -1,5 +1,6 @@
 @page "/pacientes"
 @attribute [Authorize(Roles = "Doctora,Secretaria")]
+@implements IDisposable
 @using System.ComponentModel.DataAnnotations
 @using System.Net
 @using System.Text.Json
@@ -652,7 +653,12 @@
     {
         _busqueda = e.Value?.ToString() ?? "";
 
-        _busquedaCts?.Cancel();
+        if (_busquedaCts is not null)
+        {
+            await _busquedaCts.CancelAsync();
+            _busquedaCts.Dispose();
+        }
+
         _busquedaCts = new CancellationTokenSource();
         var token = _busquedaCts.Token;
 
@@ -1158,6 +1164,12 @@
     {
         public int SeguroId { get; set; }
         public string Nombre { get; set; } = "";
+    }
+
+    public void Dispose()
+    {
+        _busquedaCts?.Cancel();
+        _busquedaCts?.Dispose();
     }
 
     private sealed class ExpedienteResumen
